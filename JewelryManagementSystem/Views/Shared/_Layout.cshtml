@@ -7,15 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     @* <link rel="stylesheet" href="~/jewelry.styles.css" asp-append-version="true" /> *@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-	<!--begin::Vendor Stylesheets(used by this page)-->
-	@* <link href="assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" /> *@
-    @* <link href="~/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" /> *@
-
 	<link href="~/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
-	@* <link href="~/datatable/datatables.css" rel="stylesheet" /> *@
 	<link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-	<!--end::Vendor Stylesheets-->
-	<!--begin::Global Stylesheets Bundle(used by all pages)-->	
 	<link href="~/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
 	
 </head>
@@ -1150,23 +1143,10 @@
 	<script src="~/assets/plugins/global/plugins.bundle.js"></script>
 	<script src="~/assets/js/scripts.bundle.js"></script>
 	<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
-    <script src="~/assets/js/mustache.js"></script>
+	<script src="~/assets/js/mustache.js"></script>
     <script src="~/global/commonjs.js"></script>
-	@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script> 
-	 *@
-	
-	
-@* 
-	<script src="~/assets/js/widgets.bundle.js"></script>
-	<script src="~/assets/js/custom/widgets.js"></script>
-	<script src="~/assets/js/custom/apps/chat/chat.js"></script>
-	<script src="~/assets/js/custom/utilities/modals/upgrade-plan.js"></script>
-	<script src="~/assets/js/custom/utilities/modals/create-app.js"></script>
-	<script src="~/assets/js/custom/utilities/modals/new-target.js"></script>
-	<script src="~/assets/js/custom/utilities/modals/users-search.js"></script>
-   *@
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

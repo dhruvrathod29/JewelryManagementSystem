@@ -39,6 +39,7 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
                             ID = Guid.TryParse(row["ID"].ToString(), out var guid) ? guid : Guid.Empty,
                             Name = CCommon.NullOrEmptyToString(row["NAME"]),
                             CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
+                            ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])
                         })
                         .ToList();
             }

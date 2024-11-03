@@ -13,9 +13,5 @@ namespace JewelryManagementSystem.DAL
             return dt;
         }
 
-        //public CategoryMstModel GetCategoryById(int id)
-        //{
-
-        //}
     }
 }
