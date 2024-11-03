@@ -5,8 +5,8 @@ namespace JewelryManagementSystem.DAL
 {
     public interface ICategoryMst
     {
-        DataTable GetAllCategory();
-
+        DataTable GetAllCategory(Guid p_uId);
+        bool AddUpdateCategory(Guid p_uId, string p_sName ,string p_sMode);
        //CategoryMstModel GetCategoryById(int id);
     }
 }
