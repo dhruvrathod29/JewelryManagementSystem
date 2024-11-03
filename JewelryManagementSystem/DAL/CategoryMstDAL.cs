@@ -1,4 +1,5 @@
 ﻿using JewelryManagementSystem.Areas.CategoryMst.Models;
+using JewelryManagementSystem.Interface;
 using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
 using System;
 using System.Data;

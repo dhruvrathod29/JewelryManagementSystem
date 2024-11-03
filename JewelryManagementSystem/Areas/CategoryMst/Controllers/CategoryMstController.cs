@@ -1,5 +1,6 @@
 ﻿using JewelryManagementSystem.Areas.CategoryMst.Models;
 using JewelryManagementSystem.DAL;
+using JewelryManagementSystem.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
@@ -15,7 +16,6 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
         {
             _categoryService = categoryService;
         }
-
         public IActionResult Index()
         {
             return View();

@@ -1,4 +1,5 @@
 using JewelryManagementSystem.DAL;
+using JewelryManagementSystem.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
