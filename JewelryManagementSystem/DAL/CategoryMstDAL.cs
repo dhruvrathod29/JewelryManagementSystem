@@ -29,7 +29,7 @@ namespace JewelryManagementSystem.DAL
                 
             }
         }
-        public bool AddUpdateCategory(Guid p_uId, string p_sName ,string p_sMode)
+        public bool AddUpdateDeleteCategory(Guid p_uId, string p_sName ,string p_sMode)
         {
             try
             {

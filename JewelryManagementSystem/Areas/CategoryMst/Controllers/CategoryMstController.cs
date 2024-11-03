@@ -76,7 +76,7 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
             {
                 if (Guid.TryParse(p_sId, out Guid p_uId))
                 {
-                    bool error = _categoryService.AddUpdateCategory(p_uId, p_sCategoryName, p_sMode);
+                    bool error = _categoryService.AddUpdateDeleteCategory(p_uId, p_sCategoryName, p_sMode);
                     if (error)
                     {
                         return Json(new
@@ -124,7 +124,7 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
                 if (Guid.TryParse(p_sId, out Guid p_uId))
                 {
 
-                    bool error = _categoryService.AddUpdateCategory(p_uId, string.Empty, "DELETE");
+                    bool error = _categoryService.AddUpdateDeleteCategory(p_uId, string.Empty, "DELETE");
                     if (error)
                     {
                         return Json(new
