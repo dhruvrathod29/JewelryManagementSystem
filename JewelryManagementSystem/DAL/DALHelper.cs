@@ -51,6 +51,7 @@ namespace JewelryManagementSystem.DAL
         }
         #endregion
 
+        #region Execute stored procedure and return DataSet
         public static DataSet GetDataSet(string procedureName, params SqlParameter[] parameters)
         {
             using (SqlConnection conn = new SqlConnection(myConnectionString))
@@ -85,8 +86,9 @@ namespace JewelryManagementSystem.DAL
                 }
             }
         }
+        #endregion
 
-        // Execute Stored Procedure and return scalar value
+        #region Execute Stored Procedure and return scalar value
         public static T ExecuteScalar<T>(string procedureName, params SqlParameter[] parameters)
         {
             using (SqlConnection conn = new SqlConnection(myConnectionString))
@@ -113,8 +115,9 @@ namespace JewelryManagementSystem.DAL
                 }
             }
         }
+        #endregion
 
-        // Execute Stored Procedure with no return value (for Insert, Update, Delete)
+        #region Execute Stored Procedure with no return value (for Insert, Update, Delete)
         public static int ExecuteNonQuery(string procedureName, params SqlParameter[] parameters)
         {
             using (SqlConnection conn = new SqlConnection(myConnectionString))
@@ -140,6 +143,6 @@ namespace JewelryManagementSystem.DAL
                 }
             }
         }
-
+        #endregion
     }
 }
