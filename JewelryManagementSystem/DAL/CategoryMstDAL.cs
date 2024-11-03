@@ -1,5 +1,6 @@
 ﻿using JewelryManagementSystem.Areas.CategoryMst.Models;
 using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -19,7 +20,7 @@ namespace JewelryManagementSystem.DAL
                     new SqlParameter("@p_uId", p_uId)
                 };
 
-                dt = DALHelper.ExecuteStoredProcedure("CategoryMst_SelectAll", parameters);
+                dt = DALHelper.GetDataTable("CategoryMst_SelectAll", parameters);
                 return dt;
             }
             catch (Exception)

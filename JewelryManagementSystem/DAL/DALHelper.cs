@@ -13,7 +13,7 @@ namespace JewelryManagementSystem.DAL
         #endregion
 
         #region Execute Stored Procedure and return DataTable
-        public static DataTable ExecuteStoredProcedure(string procedureName, params SqlParameter[] parameters)
+        public static DataTable GetDataTable(string procedureName, params SqlParameter[] parameters)
         {
             using (SqlConnection conn = new SqlConnection(myConnectionString))
             {
@@ -50,6 +50,41 @@ namespace JewelryManagementSystem.DAL
             }
         }
         #endregion
+
+        public static DataSet GetDataSet(string procedureName, params SqlParameter[] parameters)
+        {
+            using (SqlConnection conn = new SqlConnection(myConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(procedureName, conn))
+                {
+                    try
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        // Add parameters if any
+                        if (parameters != null && parameters.Length > 0)
+                        {
+                            cmd.Parameters.AddRange(parameters);
+                        }
+
+                        // Create DataSet to hold the results
+                        DataSet ds = new DataSet();
+
+                        // Create adapter and fill DataSet
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            conn.Open();
+                            da.Fill(ds);
+                        }
+                        return ds;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log error here
+                        throw new Exception($"Error executing stored procedure {procedureName}: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
 
         // Execute Stored Procedure and return scalar value
         public static T ExecuteScalar<T>(string procedureName, params SqlParameter[] parameters)
