@@ -21,9 +21,6 @@ function errorMessage(message, status) {
         toastr.error('An error occurred while processing the request please try again', '', { timeOut: 10000 })
     }
 }
-
-/*Toster part successMessage and errorMessage*/
-
 $(document).ajaxStart(function () {
     $("#loader-spinner").show();
 }).ajaxStop(function () {
