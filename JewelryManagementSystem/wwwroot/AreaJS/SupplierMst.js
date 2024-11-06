@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    debugger;
     FillSupplierData();
 });
 
@@ -32,7 +31,6 @@ function FillSupplierData() {
                 data: 'emails',
                 className: 'text-center',
                 render: function (data) {
-                    debugger;
                     // Check if the data is null, empty, or only whitespace
                     const isEmpty = !data || !data.trim();
 
@@ -43,14 +41,6 @@ function FillSupplierData() {
                             </div>
                         </div>
                     `;
-
-                    //return `
-                    //    <div class="d-flex align-items-center">
-                    //        <div class="ms-10">
-                    //            <span class="fw-bold">${data && data.trim() ? data : '-'}</span>
-                    //        </div>
-                    //    </div>
-                    //`;
                 }
             },
             {
@@ -68,14 +58,6 @@ function FillSupplierData() {
                             </div>
                         </div>
                     `;
-
-                    //return `
-                    //    <div class="d-flex align-items-center">
-                    //        <div class="ms-10">
-                    //            <span class="fw-bold">${data && data.trim() ? data : '-'}</span>
-                    //        </div>
-                    //    </div>
-                    //`;
                 }
             },
             {
@@ -164,7 +146,6 @@ function FillSupplierData() {
         contentType: false,
         success: function (result) {
             if (result != null) {
-                debugger;
                 dataTable.clear().rows.add(result.supplierMst).draw();
             }
         },
@@ -174,7 +155,7 @@ function FillSupplierData() {
 
     });
 
-    $('input[data-kt-ecommerce-order-filter="search"]').on('keyup change clear', function () {
+    $('input[data-supplier-filter="search"]').on('keyup change clear', function () {
         const searchTerm = $(this).val();
         dataTable.search(searchTerm).draw();
     });
@@ -196,7 +177,7 @@ function btnNewSupplier() {
 }
 
 function btnSupplierSave(p_sMode) {
-    debugger;
+    
     if (!$('#txtSupplierName').val()) {
         toastr.error('Name is required.', '', { timeOut: 5000 });
         $('#txtSupplierName').addClass('is-invalid');
@@ -207,7 +188,6 @@ function btnSupplierSave(p_sMode) {
         $('#txtSupplierName').removeClass('is-invalid');
     }
 
-    debugger;
     if ($('#txtSupplierEmails').val() != "") {
         if (!validateEmail($('#txtSupplierEmails').val())) {
             toastr.error('Emails is not valid.', '', { timeOut: 5000 });
@@ -247,9 +227,9 @@ function btnSupplierSave(p_sMode) {
         processData: false,
         contentType: false,
         success: function (respone) {
-            debugger;
+            
             if (respone != null && respone.success == true) {
-                debugger;
+                
                 successMessage(respone.message, true);
                 $('#supplier_modal').modal('hide');
                 FillSupplierData();
@@ -259,14 +239,14 @@ function btnSupplierSave(p_sMode) {
             }
         },
         error: function (req, status, error) {
-            debugger;
+            
             errorMessage(error, status)
         }
     });
 }
 
 function btnEdit(id) {
-    debugger;
+    
     formData = new FormData();
     formData.append('p_sId', id);
     $.ajax({
@@ -277,7 +257,7 @@ function btnEdit(id) {
         contentType: false,
         success: function (result) {
             if (result && result.supplierMst) {
-                debugger;
+                
                 $('#SupplierID').val(id);
                 $('#SupplierHeader').text('Edit Category');
                 $('#txtSupplierName').removeClass('is-invalid');
@@ -301,7 +281,7 @@ function btnEdit(id) {
 
 
 function btnDelete(id) {
-    debugger;
+    
     var formData = new FormData();
     formData.append('p_sId', id);
 
@@ -324,7 +304,7 @@ function btnDelete(id) {
                 success: function (response) {
 
                     if (response != null && response.success == true) {
-                        debugger;
+                        
                         successMessage(response.message, true);
                         FillSupplierData();
                     } else {

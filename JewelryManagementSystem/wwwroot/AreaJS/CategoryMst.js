@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    debugger;
+    
     FillData();
 });
 
@@ -91,7 +91,7 @@ function FillData() {
         contentType: false,
         success: function (result) {
             if (result != null) {
-                debugger;
+                
                 dataTable.clear().rows.add(result.categoryMst).draw();
             }
         },
@@ -117,7 +117,7 @@ function btnNewCategory() {
 }
 
 function btnEdit(id) {
-    debugger;
+    
     formData = new FormData();
     formData.append('p_sId', id);
     $.ajax({
@@ -128,7 +128,7 @@ function btnEdit(id) {
         contentType: false,
         success: function (result) {
             if (result && result.categoryMst) {
-                debugger;
+                
                 $('#CategoryID').val(id);
                 $('#CategoryHeader').text('Edit Category');
                 $('#txtCategoryName').removeClass('is-invalid');
@@ -145,7 +145,7 @@ function btnEdit(id) {
 }
 
 function btnCategorySave(p_sMode) {
-    debugger;
+    
     var txtCategoryName = $('#txtCategoryName').val();
     if (!txtCategoryName) {
         toastr.error('category name is required.', '', { timeOut: 5000 });
@@ -168,9 +168,9 @@ function btnCategorySave(p_sMode) {
         processData: false,
         contentType: false,
         success: function (respone) {
-            debugger;
+            
             if (respone != null && respone.success == true) {
-                debugger;
+                
                 successMessage(respone.message, true);
                 $('#kt_modal_new_target').modal('hide');
                 FillData();
@@ -186,7 +186,7 @@ function btnCategorySave(p_sMode) {
 }
 
 function btnDelete(id) {
-    debugger;
+    
     var formData = new FormData();
     formData.append('p_sId', id);
 
@@ -209,7 +209,7 @@ function btnDelete(id) {
                 success: function (response) {
 
                     if (response != null && response.success == true) {
-                        debugger;
+                        
                         successMessage(response.message, true);
                         FillData();
                     } else {

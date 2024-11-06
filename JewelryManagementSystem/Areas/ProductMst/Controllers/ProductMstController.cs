@@ -1,5 +1,6 @@
 ﻿using JewelryManagementSystem.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace JewelryManagementSystem.Areas.ProductMst.Controllers
 {
@@ -21,7 +22,7 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
         {
             try
             {
-
+                DataTable dt = _productService.FillProduct(Guid.Empty);
             }
             catch (Exception)
             {

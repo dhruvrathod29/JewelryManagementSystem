@@ -23,16 +23,13 @@ namespace JewelryManagementSystem.DAL
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                        // Add parameters if any
                         if (parameters != null && parameters.Length > 0)
                         {
                             cmd.Parameters.AddRange(parameters);
                         }
 
-                        // Create DataTable to hold the results
                         DataTable dt = new DataTable();
 
-                        // Create adapter and fill DataTable
                         using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                         {
                             conn.Open();
@@ -43,7 +40,6 @@ namespace JewelryManagementSystem.DAL
                     }
                     catch (Exception ex)
                     {
-                        // Log error here
                         throw new Exception($"Error executing stored procedure {procedureName}: {ex.Message}", ex);
                     }
                 }
