@@ -6,11 +6,11 @@
 function FillData() {
 
     // Check if the DataTable is already initialized
-    if ($.fn.DataTable.isDataTable('#kt_ecommerce_sales_table')) {
-        $('#kt_ecommerce_sales_table').DataTable().clear().destroy();
+    if ($.fn.DataTable.isDataTable('#Category_table')) {
+        $('#Category_table').DataTable().clear().destroy();
     }
 
-    let dataTable = $('#kt_ecommerce_sales_table').DataTable({
+    let dataTable = $('#Category_table').DataTable({
         processing: true,
         serverSide: false,
         data: [], // Will be populated via AJAX
@@ -101,7 +101,7 @@ function FillData() {
 
     });
 
-    $('input[data-kt-ecommerce-order-filter="search"]').on('keyup change clear', function () {
+    $('input[data-category-filter="search"]').on('keyup change clear', function () {
         const searchTerm = $(this).val();
         dataTable.search(searchTerm).draw();
     });
@@ -230,16 +230,4 @@ function btnDelete(id) {
             });
         }
     });
-}
-
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { day: '2-digit', month: 'short', year: 'numeric' };
-
-    // Format the date parts manually
-    const day = date.toLocaleString('en-GB', { day: '2-digit' });
-    const month = date.toLocaleString('en-GB', { month: 'short' });
-    const year = date.getFullYear();
-
-    return `${day}-${month}-${year}`;
 }

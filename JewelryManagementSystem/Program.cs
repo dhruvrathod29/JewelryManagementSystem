@@ -9,6 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 builder.Services.AddScoped<ICategoryMst, CategoryMstDAL>();
+builder.Services.AddScoped<ISupplierMst, SupplierMstDAL>();
 
 var app = builder.Build();
 

@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Folder Include="Areas\CategoryMst\Data\" />
+    <Folder Include="Areas\ProductMst\Data\" />
+    <Folder Include="Areas\SupplierMst\Data\" />
   </ItemGroup>
 
   <ItemGroup>

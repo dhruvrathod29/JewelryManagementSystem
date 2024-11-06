@@ -136,6 +136,10 @@ namespace JewelryManagementSystem.DAL
                         conn.Open();
                         return cmd.ExecuteNonQuery();
                     }
+                    catch (SqlException sqlEx) when (sqlEx.Number == 2627)
+                    {
+                        throw;
+                    }
                     catch (Exception ex)
                     {
                         throw new Exception($"Error executing stored procedure {procedureName}: {ex.Message}", ex);

@@ -1,48 +1,52 @@
 ﻿using JewelryManagementSystem.Areas.CategoryMst.Models;
+using JewelryManagementSystem.Areas.SupplierMst.Models;
 using JewelryManagementSystem.DAL;
 using JewelryManagementSystem.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
+namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
 {
-    [Area("CategoryMst")]
-    [Route("CategoryMst/[Controller]/[action]")]
-    public class CategoryMstController : Controller
+    [Area("SupplierMst")]
+    [Route("SupplierMst/[Controller]/[action]")]
+    public class SupplierMstController : Controller
     {
-        private readonly ICategoryMst _categoryService;
+        private readonly ISupplierMst _supplierService;
 
-        public CategoryMstController(ICategoryMst categoryService)
+        public SupplierMstController(ISupplierMst supplierService)
         {
-            _categoryService = categoryService;
+            _supplierService = supplierService;
         }
+
         public IActionResult Index()
         {
-            return View("CategoryMst_Index");
+            return View("SupplierMst_Index");
         }
 
-        #region FillCategory
-
+        #region FillSupplier
         [HttpPost]
-        public IActionResult FillCategory()
+        public IActionResult FillSupplier()
         {
             string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
 
             try
             {
                 Guid.TryParse(p_sId, out Guid p_uId);
-                DataTable dtblCategory = _categoryService.GetAllCategory(p_uId);
-                List<CategoryMstModel> categoryList = new List<CategoryMstModel>();
+                DataTable dtSupplier = _supplierService.FillSupplier(p_uId);
+                List<SupplierMstModel> supplierList = new List<SupplierMstModel>();
 
-                if (dtblCategory != null && dtblCategory.Rows.Count > 0)
+                if (dtSupplier != null && dtSupplier.Rows.Count > 0)
                 {
-                    categoryList = dtblCategory
-                            .Rows.Cast<DataRow>() // Ensure you're working with DataRow objects
-                            .Select(row => new CategoryMstModel
+                    supplierList = dtSupplier
+                            .Rows.Cast<DataRow>()
+                            .Select(row => new SupplierMstModel
                             {
                                 ID = Guid.TryParse(row["ID"].ToString(), out var guid) ? guid : Guid.Empty,
                                 Name = CCommon.NullOrEmptyToString(row["NAME"]),
+                                Emails = CCommon.NullOrEmptyToString(row["EMAILS"]),
+                                Contact = CCommon.NullOrEmptyToString(row["CONTACT"]),
+                                Address = CCommon.NullOrEmptyToString(row["ADDRESS"]),
                                 CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
                                 ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])
                             })
@@ -51,7 +55,7 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
 
                 return Json(new
                 {
-                    CategoryMst = categoryList
+                    SupplierMst = supplierList
                 });
             }
             catch (Exception ex)
@@ -59,25 +63,30 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
                 return Json(new
                 {
                     success = false,
-                    message = "An error occurred while retrieving categories.",
+                    message = "An error occurred while retrieving supplier.",
                     error = ex.Message // Optionally include the error message for debugging
                 });
             }
+
         }
         #endregion
 
-        #region AddUpdateCategory
-        public IActionResult AddUpdateCategory()
+        #region AddUpdateSupplier
+        [HttpPost]
+        public IActionResult AddUpdateSupplier()
         {
             string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
-            string p_sCategoryName = string.IsNullOrEmpty(Request.Form["p_sCategoryName"]) ? string.Empty : Request.Form["p_sCategoryName"].ToString();
+            string p_sName = string.IsNullOrEmpty(Request.Form["p_sName"]) ? string.Empty : Request.Form["p_sName"].ToString();
+            string p_sEmails = string.IsNullOrEmpty(Request.Form["p_sEmails"]) ? string.Empty : Request.Form["p_sEmails"].ToString();
+            string p_sContact = string.IsNullOrEmpty(Request.Form["p_sContact"]) ? string.Empty : Request.Form["p_sContact"].ToString();
+            string p_sAddress = string.IsNullOrEmpty(Request.Form["p_sAddress"]) ? string.Empty : Request.Form["p_sAddress"].ToString();
             string p_sMode = string.IsNullOrEmpty(Request.Form["p_sMode"]) ? string.Empty : Request.Form["p_sMode"].ToString();
 
             try
             {
                 if (Guid.TryParse(p_sId, out Guid p_uId))
                 {
-                    bool error = _categoryService.AddUpdateDeleteCategory(p_uId, p_sCategoryName, p_sMode);
+                    bool error = _supplierService.AddUpdateDeleteSupplier(p_uId, p_sName, p_sEmails, p_sContact, p_sAddress, p_sMode);
                     if (error)
                     {
                         return Json(new
@@ -114,26 +123,29 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
             }
             catch (Exception ex)
             {
+
                 return Json(new
                 {
                     success = false,
                     message = ex.Message,
+                    error = ex.Message
                 });
             }
         }
         #endregion
 
-        #region DeleteCategory
-        public IActionResult DeleteCategory()
+        #region DeleteSupplier
+        [HttpPost]
+        public IActionResult DeleteSupplier()
         {
             string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
-           
+
             try
             {
                 if (Guid.TryParse(p_sId, out Guid p_uId))
                 {
 
-                    bool error = _categoryService.AddUpdateDeleteCategory(p_uId, string.Empty, "DELETE");
+                    bool error = _supplierService.AddUpdateDeleteSupplier(p_uId, string.Empty, string.Empty, string.Empty, string.Empty, "DELETE");
                     if (error)
                     {
                         return Json(new
