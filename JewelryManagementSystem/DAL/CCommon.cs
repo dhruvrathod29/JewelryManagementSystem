@@ -4,12 +4,41 @@
     {
         public static string NullOrEmptyToString(object obj)
         {
+            // Check if obj is null
+            if (obj == null)
+            {
+                return string.Empty;
+            }
+
+            // Check if obj is a string
             if (obj is string str)
             {
                 return string.IsNullOrEmpty(str) ? string.Empty : str;
             }
 
             return string.Empty; // Return empty string if obj is null or not a string
+        }
+
+        public static int GetInt(object obj)
+        {
+            if (obj is int i)
+            {
+                return i;
+            }
+
+            // Handle the case where the object is a numeric type (e.g., double, float, decimal)
+            if (obj is double || obj is float || obj is decimal)
+            {
+                return Convert.ToInt32(obj);
+            }
+
+            // Handle the case where the object is a string that can be parsed to an integer
+            if (obj is string s && int.TryParse(s, out int result))
+            {
+                return result;
+            }
+
+            return 0;
         }
 
         public static DateTime NullOrDefaultDateTime(object obj)
@@ -34,7 +63,7 @@
 
             // Format the DateTime to "dd-MMM-yyyy" and return it
             return dateTime != DateTime.MinValue
-                ? dateTime.ToString("dd-MMM-yyyy")
+                ? dateTime.ToString("dd-MMM-yyyy hh:mm tt")
                 : string.Empty; // Return empty string if it's DateTime.MinValue
         }
     }

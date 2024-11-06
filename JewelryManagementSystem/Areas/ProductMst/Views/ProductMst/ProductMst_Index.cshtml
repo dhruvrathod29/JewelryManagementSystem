@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Category";
+    ViewData["Title"] = "Product";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -50,9 +50,12 @@
                 <table class="table align-middle table-row-dashed fs-6 gy-5" id="Product_table">
                     <thead>
                         <tr class="text-start text-gray-800 fw-bold fs-7 text-uppercase gs-0">
-                            <th class="min-w-100px">Category</th>
-                            <th class="text-center min-w-100px">Createion Date</th>
-                            <th class="text-center min-w-100px">Modification Date</th>
+                            <th class="text-center min-w-100px">Products Name</th>
+                            <th class="text-center min-w-100px">Category</th>
+                            <th class="text-center min-w-100px">Price</th>
+                            <th class="text-center min-w-100px">Description</th>
+                            <th class="text-center min-w-150px">Createion Date</th>
+                            <th class="text-center min-w-150px">Modification Date</th>
                             <th class="text-center min-w-100px">Actions</th>
                         </tr>
                     </thead>
@@ -66,7 +69,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="kt_modal_new_target" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="Product_modal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-600px">
         <div class="modal-content rounded">
             <div class="modal-header pb-0 border-0 justify-content-end">
@@ -80,23 +83,56 @@
                 </div>
             </div>
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                <form id="CategoryForm" class="form" action="#" method="post">
+                <form id="ProductForm" class="form" action="#" method="post">
                     <input type="hidden" id="ProductID" />
                     <div class="mb-13 text-left">
                         <h4 class="mb-3" id="ProductHeader"></h4>
                     </div>
                     <div class="d-flex flex-column mb-8 fv-row">
                         <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                            <span class="required">Category</span>
-                            @* <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Specify a Event Category name for future usage and reference"></i> *@
+                            <span class="required">Product Name</span>
                         </label>
-                        <input type="text" id="txtCategoryName" tabindex="1" class="form-control" placeholder="Enter Category Name" required />
+                        <input type="text" id="txtProductName" class="form-control" tabindex="1" placeholder="Enter product Name" required />
                     </div>
 
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-6 fv-row">
+
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span class="required">Category</span>
+                            </label>
+                            @Html.DropDownList(
+                                     "ddlProductCategory",
+                                     new SelectList(
+                                     new[] { new SelectListItem { Value = "0", Text = "-- Select Category --", Selected = true } }
+                                     .Concat(ViewBag.ddlCategory as IEnumerable<SelectListItem>),
+                                     "Value", "Text"
+                                     ),
+                                     new { @class = "form-control", @tabindex = "1", @id = "ddlProductCategory" }
+                                     )
+
+                        </div>
+                        <div class="col-md-6 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span class="required">Price</span>
+                            </label>
+                            <input type="tel" id="txtProductPrice" maxlength="9" minlength="9" pattern="\d{10}" class="form-control" tabindex="1"
+                            placeholder="Enter Price" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Description</span>
+                        </label>
+                        <textarea id="txtProductDescription" class="form-control" tabindex="1" placeholder="Enter Description" spellcheck="true"></textarea>
+
+                    </div>
                     <div class="d-flex justify-content-end pt-7">
                         <button type="reset" id="kt_modal_new_target_cancel" tabindex="2" data-bs-dismiss="modal" class="btn btn-light me-3">Cancel</button>
-                        <a id="btnCategorySave" value="Submit" tabindex="1" class="btn btn-primary" onclick="btnCategorySave('INSERT')">Submit</a>
-                        <a id="btnCategoryUpdate" class="btn btn-primary" onclick="btnCategorySave('UPDATE')">update</a>
+                        <a id="btnProductSave" value="Submit" tabindex="1" class="btn btn-primary" onclick="btnProductSave('INSERT')">Submit</a>
+                        <a id="btnProductUpdate" class="btn btn-primary" onclick="btnProductSave('UPDATE')">update</a>
                     </div>
                 </form>
             </div>
