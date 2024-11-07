@@ -14,9 +14,7 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
     public class ProductMstController : Controller
     {
         private readonly IProductMst _productService;
-
         private readonly ICategoryMst _categoryService;
-
 
         public ProductMstController(IProductMst productService, ICategoryMst categoryService)
         {
@@ -29,13 +27,15 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
             FillddlCategory();
             return View("ProductMst_Index");
         }
+
+        #region FillProduct
         public IActionResult FillProduct()
         {
             string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
             try
             {
                 Guid.TryParse(p_sId, out Guid p_uId);
-                DataTable dtProduct = _productService.FillProduct(p_uId);
+                DataTable dtProduct = _productService.GetAllProduct(p_uId);
                 List<ProductMstModel> productList = new List<ProductMstModel>();
 
                 if (dtProduct != null && dtProduct.Rows.Count > 0)
@@ -73,6 +73,7 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
             }
 
         }
+        #endregion
 
         #region AddUpdateProduct
         [HttpPost]
@@ -138,6 +139,55 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
         }
         #endregion
 
+        #region DeleteProduct
+        [HttpPost]
+        public IActionResult DeleteProduct()
+        {
+            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
+            try
+            {
+                if (Guid.TryParse(p_sId, out Guid p_uId))
+                {
+                    bool error = _productService.AddUpdateDeleteProduct(p_uId, string.Empty, Guid.Empty, 0, string.Empty, "DELETE");
+                    if (error)
+                    {
+                        return Json(new
+                        {
+                            success = true,
+                            message = "Record has been Delete successfully!",
+                        });
+                    }
+                    else
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "Failed to Delete record.",
+                        });
+                    }
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to Delete record.",
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+        #endregion
+
+        #region FillddlCategory
         public void FillddlCategory()
         {
             DataTable dtCategory = _categoryService.GetAllCategory(Guid.Empty);
@@ -150,5 +200,6 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
                                     })
                                     .ToList();
         }
+        #endregion
     }
 }

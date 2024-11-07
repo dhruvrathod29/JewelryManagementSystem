@@ -12,7 +12,6 @@ namespace JewelryManagementSystem.DAL
     {
         public DataTable GetAllCategory(Guid p_uId)
         {
-            DataTable dt = new DataTable();
             try
             {
                 // Create parameters for the stored procedure
@@ -21,12 +20,12 @@ namespace JewelryManagementSystem.DAL
                     new SqlParameter("@p_uId", p_uId)
                 };
 
-                dt = DALHelper.GetDataTable("CategoryMst_SelectAll", parameters);
+                DataTable dt = DALHelper.GetDataTable("CategoryMst_SelectAll", parameters);
                 return dt;
             }
             catch (Exception)
             {
-                return dt;
+                throw;
                 
             }
         }
@@ -47,7 +46,7 @@ namespace JewelryManagementSystem.DAL
             }
             catch (Exception)
             {
-                return false;
+                throw;
             }
             
         }

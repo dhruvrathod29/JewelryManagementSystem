@@ -6,5 +6,6 @@ namespace JewelryManagementSystem.Interface
     {
         DataTable GetAllCategory(Guid p_uId);
         bool AddUpdateDeleteCategory(Guid p_uId, string p_sName, string p_sMode);
+
     }
 }

@@ -6,9 +6,8 @@ namespace JewelryManagementSystem.DAL
 {
     public class SupplierMstDAL : ISupplierMst
     {
-        public DataTable FillSupplier(Guid p_uId)
+        public DataTable GetAllSupplier(Guid p_uId)
         {
-            DataTable dt = new DataTable();
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
@@ -16,7 +15,7 @@ namespace JewelryManagementSystem.DAL
                     new SqlParameter("@p_uId", p_uId)
                 };
 
-                dt = DALHelper.GetDataTable("SupplierMst_SelectAll", parameters);
+               DataTable dt = DALHelper.GetDataTable("SupplierMst_SelectAll", parameters);
                 return dt;
 
             }

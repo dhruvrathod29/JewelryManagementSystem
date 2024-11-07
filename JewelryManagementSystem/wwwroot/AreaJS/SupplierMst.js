@@ -279,7 +279,6 @@ function btnEdit(id) {
     });
 }
 
-
 function btnDelete(id) {
     
     var formData = new FormData();

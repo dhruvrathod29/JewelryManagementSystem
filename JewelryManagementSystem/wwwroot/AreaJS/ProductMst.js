@@ -136,9 +136,7 @@ function FillProduct() {
         error: function (req, status, message) {
             errorMessage(message, status)
         }
-
     });
-
     $('input[data-product-filter="search"]').on('keyup change clear', function () {
         const searchTerm = $(this).val();
         dataTable.search(searchTerm).draw();
@@ -146,7 +144,7 @@ function FillProduct() {
 }
 
 function btnNewProduct() {
-
+    debugger;
     $('#ProductHeader').text('Add Product');
     $('#txtProductName').val('');
     $('#txtProductName').removeClass('is-invalid');
@@ -233,6 +231,83 @@ function btnProductSave(p_sMode) {
         error: function (req, status, error) {
 
             errorMessage(error, status)
+        }
+    });
+}
+function btnEdit(id) {
+
+    formData = new FormData();
+    formData.append('p_sId', id);
+    $.ajax({
+        type: "POST",
+        url: "/ProductMst/ProductMst/FillProduct",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            if (result && result.productMst) {
+
+                $('#ProductID').val(id);
+                $('#ProductHeader').text('Edit Product');
+                $('#txtProductName').removeClass('is-invalid');
+                $('#ddlProductCategory').removeClass('is-invalid');
+                $('#txtProductPrice').removeClass('is-invalid');
+                $('#txtProductDescription').removeClass('is-invalid');
+                $('#btnProductSave').hide();
+                $('#btnProductUpdate').show();
+                $('#txtProductName').val(result.productMst[0].name);
+                $('#ddlProductCategory').val(result.productMst[0].categoryID);
+                $('#txtProductPrice').val(result.productMst[0].price);
+                $('#txtProductDescription').val(result.productMst[0].description);
+                $('#Product_modal').modal('show');
+            }
+        },
+        error: function (req, status, message) {
+            errorMessage(message, status)
+        }
+    });
+}
+function btnDelete(id) {
+    var formData = new FormData();
+    formData.append('p_sId', id);
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't to Delete Record!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: "/ProductMst/ProductMst/DeleteProduct",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+
+                    if (response != null && response.success == true) {
+                        successMessage(response.message, true);
+                        FillProduct();
+                    } else {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to delete record.",
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to delete record.",
+                        icon: "error"
+                    });
+                }
+            });
         }
     });
 }

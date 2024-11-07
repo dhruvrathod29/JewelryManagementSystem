@@ -6,9 +6,8 @@ namespace JewelryManagementSystem.DAL
 {
     public class ProductMstDAL : IProductMst
     {
-        public DataTable FillProduct(Guid p_uId)
+        public DataTable GetAllProduct(Guid p_uId)
         {
-            DataTable dt = new DataTable();
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
@@ -16,7 +15,7 @@ namespace JewelryManagementSystem.DAL
                     new SqlParameter("@p_uId", p_uId)
                 };
 
-                dt = DALHelper.GetDataTable("ProductMst_SelectAll", parameters);
+                DataTable dt = DALHelper.GetDataTable("ProductMst_SelectAll", parameters);
                 return dt;
 
             }
@@ -43,6 +42,25 @@ namespace JewelryManagementSystem.DAL
 
                 int vReturnValue = DALHelper.ExecuteNonQuery("ProductMst_AddUpdateDelete", parameters);
                 return (vReturnValue == -1 ? false : true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public DataTable ddlFillProduct(Guid p_uId)
+        {
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@p_uId", p_uId)
+                };
+
+                DataTable dt = DALHelper.GetDataTable("ProductMst_DropDown_SelectAll", parameters);
+                return dt;
+
             }
             catch (Exception)
             {

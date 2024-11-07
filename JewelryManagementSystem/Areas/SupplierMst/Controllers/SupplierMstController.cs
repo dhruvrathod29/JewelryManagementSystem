@@ -33,7 +33,7 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
             try
             {
                 Guid.TryParse(p_sId, out Guid p_uId);
-                DataTable dtSupplier = _supplierService.FillSupplier(p_uId);
+                DataTable dtSupplier = _supplierService.GetAllSupplier(p_uId);
                 List<SupplierMstModel> supplierList = new List<SupplierMstModel>();
 
                 if (dtSupplier != null && dtSupplier.Rows.Count > 0)
