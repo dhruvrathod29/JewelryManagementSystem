@@ -12,19 +12,25 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
     [Route("SupplierMst/[Controller]/[action]")]
     public class SupplierMstController : Controller
     {
+        #region Service
         private readonly ISupplierMst _supplierService;
+        #endregion
 
+        #region Constructor
         public SupplierMstController(ISupplierMst supplierService)
         {
             _supplierService = supplierService;
         }
+        #endregion
 
+        #region Index
         public IActionResult Index()
         {
             return View("SupplierMst_Index");
         }
+        #endregion
 
-        #region FillSupplier
+        #region Fill Supplier
         [HttpPost]
         public IActionResult FillSupplier()
         {
@@ -71,7 +77,7 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
         }
         #endregion
 
-        #region AddUpdateSupplier
+        #region Add Update Supplier
         [HttpPost]
         public IActionResult AddUpdateSupplier()
         {
@@ -134,7 +140,7 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
         }
         #endregion
 
-        #region DeleteSupplier
+        #region Delete Supplier
         [HttpPost]
         public IActionResult DeleteSupplier()
         {

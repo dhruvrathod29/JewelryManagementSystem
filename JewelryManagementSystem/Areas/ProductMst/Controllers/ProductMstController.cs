@@ -13,22 +13,28 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
     [Route("ProductMst/[Controller]/[action]")]
     public class ProductMstController : Controller
     {
+        #region Service
         private readonly IProductMst _productService;
         private readonly ICategoryMst _categoryService;
+        #endregion
 
+        #region Constructor
         public ProductMstController(IProductMst productService, ICategoryMst categoryService)
         {
             _productService = productService;   
             _categoryService = categoryService;
         }
+        #endregion
 
+        #region Index
         public IActionResult Index()
         {
             FillddlCategory();
             return View("ProductMst_Index");
         }
+        #endregion
 
-        #region FillProduct
+        #region Fill Product
         public IActionResult FillProduct()
         {
             string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
@@ -75,7 +81,7 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
         }
         #endregion
 
-        #region AddUpdateProduct
+        #region Add Update Product
         [HttpPost]
         public IActionResult AddUpdateProduct()
         {
@@ -139,7 +145,7 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
         }
         #endregion
 
-        #region DeleteProduct
+        #region Delete Product
         [HttpPost]
         public IActionResult DeleteProduct()
         {
@@ -187,7 +193,7 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
         }
         #endregion
 
-        #region FillddlCategory
+        #region Fill Category DropDown
         public void FillddlCategory()
         {
             DataTable dtCategory = _categoryService.GetAllCategory(Guid.Empty);

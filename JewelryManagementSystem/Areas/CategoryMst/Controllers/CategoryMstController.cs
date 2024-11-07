@@ -11,18 +11,25 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
     [Route("CategoryMst/[Controller]/[action]")]
     public class CategoryMstController : Controller
     {
+        #region service
         private readonly ICategoryMst _categoryService;
+        #endregion
 
+        #region Constructor
         public CategoryMstController(ICategoryMst categoryService)
         {
             _categoryService = categoryService;
         }
+        #endregion
+
+        #region Index
         public IActionResult Index()
         {
             return View("CategoryMst_Index");
         }
+        #endregion
 
-        #region FillCategory
+        #region Fill Category
 
         [HttpPost]
         public IActionResult FillCategory()
@@ -66,7 +73,7 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
         }
         #endregion
 
-        #region AddUpdateCategory
+        #region Add Update Category
         public IActionResult AddUpdateCategory()
         {
             string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
@@ -123,7 +130,7 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
         }
         #endregion
 
-        #region DeleteCategory
+        #region Delete Category
         public IActionResult DeleteCategory()
         {
             string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
