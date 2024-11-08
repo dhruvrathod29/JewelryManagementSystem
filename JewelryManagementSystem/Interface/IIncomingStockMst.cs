@@ -6,7 +6,6 @@ namespace JewelryManagementSystem.Interface
     {
         DataTable GetAllIncomingStock(Guid p_uId);
         DataSet ddlFillProduct(Guid p_uId);
-
-        bool AddUpdateIncomingStock();
+        bool AddUpdateIncomingStock(Guid p_uId, Guid p_uProductId, Guid p_uSupplierId, int p_iQuantity, DateTime p_dReceivedDate, string p_sMode);
     }
 }

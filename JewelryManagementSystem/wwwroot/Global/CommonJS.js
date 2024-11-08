@@ -44,7 +44,6 @@ function isValidNumber(input) {
     return regex.test(input);
 }
 
-
 function formatDate(dateString) {
     const date = new Date(dateString); // Convert string to Date object
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

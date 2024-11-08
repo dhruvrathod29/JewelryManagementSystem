@@ -1,4 +1,5 @@
-﻿using JewelryManagementSystem.Areas.IncomingStockMst.Models;
+﻿using Humanizer;
+using JewelryManagementSystem.Areas.IncomingStockMst.Models;
 using JewelryManagementSystem.Areas.ProductMst.Models;
 using JewelryManagementSystem.DAL;
 using JewelryManagementSystem.Interface;
@@ -39,19 +40,73 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
         }
         #endregion
 
-        #region Add Update Product
+        #region Fill Incoming Stock
+        public IActionResult FillIncomingStock()
+        {
+            try
+            {
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
+                DataTable dtIncomingStock = _incomingStockService.GetAllIncomingStock(p_uId);
+
+                List<IncomingStockMstModel> incomingStockList = new List<IncomingStockMstModel>();
+
+                if (dtIncomingStock != null && dtIncomingStock.Rows.Count > 0)
+                {
+                    incomingStockList = dtIncomingStock
+                            .Rows.Cast<DataRow>() // Ensure you're working with DataRow objects
+                            .Select(row => new IncomingStockMstModel
+                            {
+                                ID = Guid.TryParse(row["ID"].ToString(), out Guid guid) ? guid : Guid.Empty,
+                                ProductId = Guid.TryParse(row["PRODUCTID"].ToString(), out Guid productid) ? productid : Guid.Empty,
+                                ProductName = CCommon.NullOrEmptyToString(row["PRODUCTNAME"]),
+                                SupplierId = Guid.TryParse(row["SUPPLIERID"].ToString(), out Guid supplierid) ? supplierid : Guid.Empty,
+                                SupplierName = CCommon.NullOrEmptyToString(row["SUPPLIERNAME"]),
+                                CategoryId = Guid.TryParse(row["CATEGORYID"].ToString(), out Guid categoryid) ? categoryid : Guid.Empty,
+                                CategoryName = CCommon.NullOrEmptyToString(row["CATEGORYNAME"]),
+                                Quantity = CCommon.GetInt(row["QUANTITY"]),
+                                Description = CCommon.NullOrEmptyToString(row["DESCRIPTION"]),
+                                Price = CCommon.GetInt(row["PRICE"]),
+                                TotalPrice = CCommon.GetInt(row["TOTALPRICE"]),
+                                ReceivedDate = CCommon.NullOrDefaultDateTime(row["RECEIVEDDATE"]),
+                                CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
+                                ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])
+
+                            })
+                            .ToList();
+                }
+
+                return Json(new
+                {
+                    IncomingStockMst = incomingStockList
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while retrieving supplier.",
+                    error = ex.Message // Optionally include the error message for debugging
+                });
+            }
+
+        }
+        #endregion
+
+        #region Add Update Incoming Stock
         [HttpPost]
         public IActionResult AddUpdateIncomingStock()
         {
             Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
             Guid.TryParse(Request.Form["p_sProductId"], out Guid p_uProductId);
-            Guid.TryParse(Request.Form["p_sSupplierId"], out Guid p_sSupplierId);
+            Guid.TryParse(Request.Form["p_sSupplierId"], out Guid p_uSupplierId);
             int.TryParse(Request.Form["p_iQuantity"], out int p_iQuantity);
             DateTime.TryParse(Request.Form["p_sReceivedDate"], out DateTime p_dReceivedDate);
             string p_sMode = string.IsNullOrEmpty(Request.Form["p_sMode"]) ? string.Empty : Request.Form["p_sMode"].ToString();
             try
             {
-                bool error = _incomingStockService.AddUpdateIncomingStock();
+                bool error = _incomingStockService.AddUpdateIncomingStock(p_uId, p_uProductId, p_uSupplierId, p_iQuantity, p_dReceivedDate, p_sMode);
 
                 if (error)
                 {
@@ -91,57 +146,40 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
         }
         #endregion
 
-        #region Fill Incoming Stock
-        public IActionResult FillIncomingStock()
+        #region Delete Incoming Stock
+        [HttpPost]
+        public IActionResult DeleteIncomingStock()
         {
             try
             {
                 Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
-                DataTable dtIncomingStock = _incomingStockService.GetAllIncomingStock(p_uId);
+                bool error = _incomingStockService.AddUpdateIncomingStock(p_uId, Guid.Empty, Guid.Empty, 0, DateTime.Now, "DELETE");
 
-                List<IncomingStockMstModel> incomingStockList = new List<IncomingStockMstModel>();
-
-                if (dtIncomingStock != null && dtIncomingStock.Rows.Count > 0)
+                if (error)
                 {
-                    incomingStockList = dtIncomingStock
-                            .Rows.Cast<DataRow>() // Ensure you're working with DataRow objects
-                            .Select(row => new IncomingStockMstModel
-                            {
-                                ID = Guid.TryParse(row["ID"].ToString(), out Guid guid) ? guid : Guid.Empty,
-                                ProductId = Guid.TryParse(row["PRODUCTID"].ToString(), out Guid productid) ? productid : Guid.Empty,
-                                ProductName = CCommon.NullOrEmptyToString(row["PRODUCTNAME"]),
-                                SupplierId = Guid.TryParse(row["SUPPLIERID"].ToString(), out Guid supplierid) ? supplierid : Guid.Empty,
-                                SupplierName = CCommon.NullOrEmptyToString(row["SUPPLIERNAME"]),
-                                CategoryId = Guid.TryParse(row["CATEGORYID"].ToString(), out Guid categoryid) ? categoryid : Guid.Empty,
-                                CategoryName = CCommon.NullOrEmptyToString(row["CATEGORYNAME"]),
-                                Quantity = CCommon.GetInt(row["QUANTITY"]),
-                                Description = CCommon.NullOrEmptyToString(row["DESCRIPTION"]),
-                                Price = CCommon.GetInt(row["PRICE"]),
-                                TotalPrice = CCommon.GetInt(row["TOTALPRICE"]),
-                                ReceivedDate = CCommon.NullOrDefaultDateTime(row["RECEIVEDDATE"]),
-                                CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
-                                ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])
-                                
-                            })
-                            .ToList();
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Record has been Delete successfully!",
+                    });
                 }
-
-                return Json(new
+                else
                 {
-                    IncomingStockMst = incomingStockList
-                });
-
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to Delete record.",
+                    });
+                }
             }
             catch (Exception ex)
             {
                 return Json(new
                 {
                     success = false,
-                    message = "An error occurred while retrieving supplier.",
-                    error = ex.Message // Optionally include the error message for debugging
+                    message = ex.Message,
                 });
             }
-
         }
         #endregion
 

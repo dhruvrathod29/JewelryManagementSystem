@@ -70,10 +70,27 @@ namespace JewelryManagementSystem.DAL
                 throw;
             }
         }
-
-        public bool AddUpdateIncomingStock()
+        public bool AddUpdateIncomingStock(Guid p_uId, Guid p_uProductId, Guid p_uSupplierId, int p_iQuantity, DateTime p_dReceivedDate, string p_sMode)
         {
-            throw new NotImplementedException();
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@p_uId", p_uId),
+                    new SqlParameter("@p_uProductId", p_uProductId),
+                    new SqlParameter("@p_uSupplierId", p_uSupplierId),
+                    new SqlParameter("@p_iQuantity", p_iQuantity),
+                    new SqlParameter("@p_dReceivedDate", p_dReceivedDate),
+                    new SqlParameter("@p_sMode", p_sMode)
+                };
+
+                int vReturnValue = DALHelper.ExecuteNonQuery("IncomingStockMst_AddUpdateDelete", parameters);
+                return (vReturnValue == -1 ? false : true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

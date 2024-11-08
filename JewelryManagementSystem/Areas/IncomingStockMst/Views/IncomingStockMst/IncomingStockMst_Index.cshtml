@@ -72,7 +72,7 @@
 </div>
 
 <div class="modal fade" id="IncomingStock_modal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered mw-600px">
+    <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content rounded">
             <div class="modal-header pb-0 border-0 justify-content-end">
                 <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
@@ -90,37 +90,19 @@
                     <div class="mb-13 text-left">
                         <h4 class="mb-3" id="IncomingStockHeader"></h4>
                     </div>
-
-                    <div class="d-flex flex-column mb-8 fv-row">
-                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                            <span class="required">Category</span>
-                        </label>
-                        @Html.DropDownList("ddlIncomingCategory",
-                        ViewBag.ddlCategory as IEnumerable<SelectListItem>,
-                        "-- Select Category --",
-                        new { @class = "form-control", @id = "ddlIncomingCategory", @onchange = "ddlFillProduct()" })
-
-                    </div>
-
-                    <div class="d-flex flex-column mb-8 fv-row">
-                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                            <span class="required">Product</span>
-                        </label>
-                        <select id="ddlIncomingProduct" class="form-control" onchange="FillDescription()">
-                            <option value="">--Select product--</option>
-                        </select>
-                    </div>
-
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
+
                             <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                                <span class="required">Description</span>
+                                <span class="required">Category</span>
                             </label>
-                            <input type="text" id="txtIncomingDescription" class="form-control" tabindex="1" placeholder="Enter product Name" disabled="disabled" required />
+                            @Html.DropDownList("ddlIncomingCategory",
+                                     ViewBag.ddlCategory as IEnumerable<SelectListItem>,
+                                     "-- Select Category --",
+                                     new { @class = "form-control", @id = "ddlIncomingCategory", @onchange = "ddlFillProduct()" })
 
                         </div>
                         <div class="col-md-6 fv-row">
-
                             <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
                                 <span class="required">Supplier Name</span>
                             </label>
@@ -129,22 +111,42 @@
                                      "-- Select Category --",
                                      new { @class = "form-control", @id = "ddlIncomingSupplier" })
                         </div>
-                        
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Product</span>
+                        </label>
+                        <select id="ddlIncomingProduct" class="form-control" onchange="FillDescription()">
+                            <option value="">--Select product--</option>
+                        </select>
                     </div>
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span class="required">Price</span>
+                            </label>
+                            <input type="text" id="txtIncomingPrice" class="form-control" placeholder="Enter Price" tabindex="1" disabled="disabled" required />
 
+                        </div>
+                        <div class="col-md-6 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span class="required">Description</span>
+                            </label>
+                            <input type="text" id="txtIncomingDescription" class="form-control" tabindex="1" placeholder="Enter Description" disabled="disabled" required />
+                        </div>
+                    </div>
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-6 fv-row">
                             <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
                                 <span class="required">Quantity</span>
                             </label>
-                            <input type="text" id="txtIncomingQuantity" class="form-control" tabindex="1" placeholder="Enter product Name" required />
+                            <input type="text" id="txtIncomingQuantity" class="form-control" tabindex="1" placeholder="Enter Quantity" required />
                         </div>
                         <div class="col-md-6 fv-row">
                             <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
                                 <span class="required">Received Date</span>
                             </label>
-                            <input type="date" id="txtIncomingReceivedDate" class="form-control" tabindex="1" placeholder="Enter product Name" required />
-
+                            <input type="datetime-local" id="txtIncomingReceivedDate" class="form-control" tabindex="1" placeholder="Enter Received Date" required />
                         </div>
                     </div>
                     <div class="d-flex justify-content-end pt-7">
