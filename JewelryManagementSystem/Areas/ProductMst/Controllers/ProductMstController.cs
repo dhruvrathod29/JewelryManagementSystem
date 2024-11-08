@@ -37,10 +37,9 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
         #region Fill Product
         public IActionResult FillProduct()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
             try
             {
-                Guid.TryParse(p_sId, out Guid p_uId);
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
                 DataTable dtProduct = _productService.GetAllProduct(p_uId);
                 List<ProductMstModel> productList = new List<ProductMstModel>();
 
@@ -85,35 +84,23 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
         [HttpPost]
         public IActionResult AddUpdateProduct()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
+            Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
             string p_sName = string.IsNullOrEmpty(Request.Form["p_sName"]) ? string.Empty : Request.Form["p_sName"].ToString();
-            string p_sCategoryId = string.IsNullOrEmpty(Request.Form["p_sCategoryId"]) ? string.Empty : Request.Form["p_sCategoryId"].ToString();
+            Guid.TryParse(Request.Form["p_sCategoryId"], out Guid p_uCategoryId);
             int.TryParse(Request.Form["p_sPrice"], out int p_iPrice);
             string p_sDescription = string.IsNullOrEmpty(Request.Form["p_sDescription"]) ? string.Empty : Request.Form["p_sDescription"].ToString();
             string p_sMode = string.IsNullOrEmpty(Request.Form["p_sMode"]) ? string.Empty : Request.Form["p_sMode"].ToString();
 
             try
             {
-                if (Guid.TryParse(p_sId, out Guid p_uId) && Guid.TryParse(p_sCategoryId, out Guid p_uCategoryId))
+                bool error = _productService.AddUpdateDeleteProduct(p_uId, p_sName, p_uCategoryId, p_iPrice, p_sDescription, p_sMode);
+                if (error)
                 {
-                    bool error = _productService.AddUpdateDeleteProduct(p_uId, p_sName, p_uCategoryId, p_iPrice, p_sDescription, p_sMode);
-
-                    if (error)
+                    return Json(new
                     {
-                        return Json(new
-                        {
-                            success = true,
-                            message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Record has been insert successfully!" : "Record has been update successfully!",
-                        });
-                    }
-                    else
-                    {
-                        return Json(new
-                        {
-                            success = false,
-                            message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Failed to insert record." : "Failed to update record.",
-                        });
-                    }
+                        success = true,
+                        message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Record has been insert successfully!" : "Record has been update successfully!",
+                    });
                 }
                 else
                 {
@@ -123,6 +110,7 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
                         message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Failed to insert record." : "Failed to update record.",
                     });
                 }
+               
             }
             catch (SqlException sqlEx) when (sqlEx.Number == 2627)
             {
@@ -149,28 +137,18 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
         [HttpPost]
         public IActionResult DeleteProduct()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
             try
             {
-                if (Guid.TryParse(p_sId, out Guid p_uId))
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
+                bool error = _productService.AddUpdateDeleteProduct(p_uId, string.Empty, Guid.Empty, 0, string.Empty, "DELETE");
+                
+                if (error)
                 {
-                    bool error = _productService.AddUpdateDeleteProduct(p_uId, string.Empty, Guid.Empty, 0, string.Empty, "DELETE");
-                    if (error)
+                    return Json(new
                     {
-                        return Json(new
-                        {
-                            success = true,
-                            message = "Record has been Delete successfully!",
-                        });
-                    }
-                    else
-                    {
-                        return Json(new
-                        {
-                            success = false,
-                            message = "Failed to Delete record.",
-                        });
-                    }
+                        success = true,
+                        message = "Record has been Delete successfully!",
+                    });
                 }
                 else
                 {
@@ -180,7 +158,6 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
                         message = "Failed to Delete record.",
                     });
                 }
-
             }
             catch (Exception ex)
             {

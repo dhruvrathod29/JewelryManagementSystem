@@ -15,6 +15,10 @@ function FillIncomingStock() {
     let dataTable = $('#IncomingStock_table').DataTable({
         processing: false,
         serverSide: false,
+        scrollX: true,
+        fixedColumns: {
+            right: 1
+        },
         data: [], // Will be populated via AJAX
         columns: [
             {
@@ -36,7 +40,7 @@ function FillIncomingStock() {
                 render: function (data) {
                     return `
                         <div class="d-flex align-items-center">
-                            <div class="ms-15">
+                            <div class="ms-12">
                                 <span class="fw-bold">${data}</span>
                             </div>
                         </div>
@@ -62,14 +66,39 @@ function FillIncomingStock() {
                 render: function (data) {
                     return `
                         <div class="d-flex align-items-center">
-                            <div class="ms-20">
+                            <div class="ms-15">
                                 <span class="fw-bold">${data}</span>
                             </div>
                         </div>
                     `;
                 }
             },
-           
+            {
+                data: 'price',
+                className: 'text-center',
+                render: function (data) {
+                    return `
+                        <div class="d-flex align-items-center">
+                            <div class="ms-15">
+                                <span class="fw-bold">${data}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'totalPrice',
+                className: 'text-center',
+                render: function (data) {
+                    return `
+                        <div class="d-flex align-items-center">
+                            <div class="ms-10">
+                                <span class="fw-bold">${data}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            },
             {
                 data: 'supplierName',
                 className: 'text-center',
@@ -151,6 +180,22 @@ function FillIncomingStock() {
 }
 
 function btnNewIncomingStock() {
+    $("#IncomingStockHeader").text("Add Incoming Stock");
+    $("#ddlIncomingCategory").val('');
+    $('#ddlIncomingCategory').removeClass('is-invalid');
+    $("#ddlIncomingProduct").empty();
+    $("#ddlIncomingProduct").append($("<option></option>").val("").html("--Select Product--"));
+    $('#ddlIncomingProduct').removeClass('is-invalid');
+    $("#txtIncomingDescription").val('');
+    $('#txtIncomingDescription').removeClass('is-invalid');
+    $("#ddlIncomingSupplier").val('');
+    $('#ddlIncomingSupplier').removeClass('is-invalid');
+    $("#txtIncomingQuantity").val('');
+    $('#txtIncomingQuantity').removeClass('is-invalid');
+    $("#txtIncomingReceivedDate").val('');
+    $('#txtIncomingReceivedDate').removeClass('is-invalid');
+    $('#btnIncomingStockSave').show();
+    $('#btnIncomingStockUpdate').hide();
     $('#IncomingStock_modal').modal('show');
 }
 
@@ -188,6 +233,94 @@ function ddlFillProduct() {
         $("#ddlIncomingProduct").append($("<option></option>").val("").html("--Select Product--"));
         $("#txtIncomingDescription").val('');
     }
+}
+
+function btnIncomingStockSave(p_sMode) {
+
+    if (!$('#ddlIncomingCategory').val()) {
+        toastr.error('Category is required.', '', { timeOut: 5000 });
+        $('#ddlIncomingCategory').addClass('is-invalid');
+        $('#ddlIncomingCategory').focus();
+        return;
+    }
+    else {
+        $('#ddlIncomingCategory').removeClass('is-invalid');
+    }
+
+    if (!$('#ddlIncomingProduct').val()) {
+        toastr.error('Product is required.', '', { timeOut: 5000 });
+        $('#ddlIncomingProduct').addClass('is-invalid');
+        $('#ddlIncomingProduct').focus();
+        return;
+    }
+    else {
+        $('#ddlIncomingProduct').removeClass('is-invalid');
+    }
+
+
+    if (!$('#ddlIncomingSupplier').val()) {
+        toastr.error('Supplier is required.', '', { timeOut: 5000 });
+        $('#ddlIncomingSupplier').addClass('is-invalid');
+        $('#ddlIncomingSupplier').focus();
+        return;
+    }
+    else {
+        $('#ddlIncomingSupplier').removeClass('is-invalid');
+    }
+
+    if (!$('#txtIncomingQuantity').val()) {
+        toastr.error('Quantity is required.', '', { timeOut: 5000 });
+        $('#txtIncomingQuantity').addClass('is-invalid');
+        $('#txtIncomingQuantity').focus();
+        return;
+    }
+    else {
+        $('#txtIncomingQuantity').removeClass('is-invalid');
+    }
+
+
+    if (!$('#txtIncomingReceivedDate').val()) {
+        toastr.error('Received Date is required.', '', { timeOut: 5000 });
+        $('#txtIncomingReceivedDate').addClass('is-invalid');
+        $('#txtIncomingReceivedDate').focus();
+        return;
+    }
+    else {
+        $('#txtIncomingReceivedDate').removeClass('is-invalid');
+    }
+    debugger;
+
+    formData = new FormData();
+    formData.append('p_sId', p_sMode == "INSERT" ? "" : $('#IncomingStockID').val());
+    formData.append('p_sProductId', '');
+    formData.append('p_sSupplierId', $('#ddlIncomingSupplier').val());
+    formData.append('p_iQuantity', $('#txtIncomingQuantity').val());
+    formData.append('p_sReceivedDate', $('#txtIncomingReceivedDate').val());
+    formData.append('p_sMode', p_sMode);
+    debugger;
+    $.ajax({
+        type: "POST",
+        url: "/IncomingStockMst/IncomingStockMst/AddUpdateIncomingStock",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (respone) {
+
+            if (respone != null && respone.success == true) {
+
+                successMessage(respone.message, true);
+                $('#IncomingStock_modal').modal('hide');
+                FillIncomingStock();
+            }
+            else {
+                errorMessage(respone.message, false);
+            }
+        },
+        error: function (req, status, error) {
+
+            errorMessage(error, status)
+        }
+    });
 }
 
 function FillDescription() {

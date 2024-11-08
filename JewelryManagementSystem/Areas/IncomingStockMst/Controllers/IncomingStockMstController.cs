@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
 {
@@ -38,15 +39,65 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
         }
         #endregion
 
+        #region Add Update Product
+        [HttpPost]
+        public IActionResult AddUpdateIncomingStock()
+        {
+            Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
+            Guid.TryParse(Request.Form["p_sProductId"], out Guid p_uProductId);
+            Guid.TryParse(Request.Form["p_sSupplierId"], out Guid p_sSupplierId);
+            int.TryParse(Request.Form["p_iQuantity"], out int p_iQuantity);
+            DateTime.TryParse(Request.Form["p_sReceivedDate"], out DateTime p_dReceivedDate);
+            string p_sMode = string.IsNullOrEmpty(Request.Form["p_sMode"]) ? string.Empty : Request.Form["p_sMode"].ToString();
+            try
+            {
+                bool error = _incomingStockService.AddUpdateIncomingStock();
+
+                if (error)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Record has been insert successfully!" : "Record has been update successfully!",
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Failed to insert record." : "Failed to update record.",
+                    });
+                }
+            }
+            catch (SqlException sqlEx) when (sqlEx.Number == 2627)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Record already exists!",
+                });
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message,
+                    error = ex.Message
+                });
+            }
+        }
+        #endregion
+
         #region Fill Incoming Stock
         public IActionResult FillIncomingStock()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
             try
             {
-                Guid.TryParse(p_sId, out Guid p_uId);
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
                 DataTable dtIncomingStock = _incomingStockService.GetAllIncomingStock(p_uId);
-
 
                 List<IncomingStockMstModel> incomingStockList = new List<IncomingStockMstModel>();
 
@@ -65,6 +116,8 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
                                 CategoryName = CCommon.NullOrEmptyToString(row["CATEGORYNAME"]),
                                 Quantity = CCommon.GetInt(row["QUANTITY"]),
                                 Description = CCommon.NullOrEmptyToString(row["DESCRIPTION"]),
+                                Price = CCommon.GetInt(row["PRICE"]),
+                                TotalPrice = CCommon.GetInt(row["TOTALPRICE"]),
                                 ReceivedDate = CCommon.NullOrDefaultDateTime(row["RECEIVEDDATE"]),
                                 CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
                                 ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])
@@ -97,10 +150,6 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
         {
             try
             {
-                //DataTable dtCategory = _categoryService.GetAllCategory(Guid.Empty);
-                //DataTable dtSupplier = _supplierService.GetAllSupplier(Guid.Empty);
-                //DataTable dtProduct = _productService.ddlFillProduct(Guid.Empty);
-                //dtProduct
                 DataSet ds = _incomingStockService.ddlFillProduct(Guid.Empty);
 
                 if (ds != null && ds.Tables.Count > 0)
@@ -140,38 +189,6 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
                         ViewBag.dtProduct = ds.Tables["dtProduct"];
                     }
                 }
-
-               
-
-                //if (dtCategory != null && dtCategory.Rows.Count > 0)
-                //{
-                //    ViewBag.ddlCategory = dtCategory.AsEnumerable()
-                //                            .Select(row => new SelectListItem
-                //                            {
-                //                                Value = row["ID"].ToString(),
-                //                                Text = row["NAME"].ToString()
-                //                            })
-                //                            .ToList();
-                //}
-                //else
-                //{
-                //    ViewBag.ddlCategory = new List<SelectListItem>();
-                //}
-
-                //if (dtSupplier != null && dtSupplier.Rows.Count > 0)
-                //{
-                //    ViewBag.ddlSupplier = dtSupplier.AsEnumerable()
-                //                            .Select(row => new SelectListItem
-                //                            {
-                //                                Value = row["ID"].ToString(),
-                //                                Text = row["NAME"].ToString()
-                //                            })
-                //                            .ToList();
-                //}
-                //else
-                //{
-                //    ViewBag.ddlSupplier = new List<SelectListItem>();
-                //}
             }
             catch (Exception)
             {
@@ -185,11 +202,9 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
         [HttpPost]
         public IActionResult ddlFillProduct()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
-            Guid.TryParse(p_sId, out Guid p_uId);
-
             try
             {
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
                 DataSet ds = _incomingStockService.ddlFillProduct(p_uId);
 
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables.Contains("dtProduct"))
@@ -211,8 +226,6 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
                 return Json(new { success = false, message = "An error occurred while fetching products." });
             }
         }
-
-
         #endregion
     }
 }

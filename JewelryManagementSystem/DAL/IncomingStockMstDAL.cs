@@ -70,5 +70,10 @@ namespace JewelryManagementSystem.DAL
                 throw;
             }
         }
+
+        public bool AddUpdateIncomingStock()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

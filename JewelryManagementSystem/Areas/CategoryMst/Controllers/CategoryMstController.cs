@@ -34,11 +34,9 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
         [HttpPost]
         public IActionResult FillCategory()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
-
             try
             {
-                Guid.TryParse(p_sId, out Guid p_uId);
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
                 DataTable dtblCategory = _categoryService.GetAllCategory(p_uId);
                 List<CategoryMstModel> categoryList = new List<CategoryMstModel>();
 
@@ -76,31 +74,20 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
         #region Add Update Category
         public IActionResult AddUpdateCategory()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
+            Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
             string p_sCategoryName = string.IsNullOrEmpty(Request.Form["p_sCategoryName"]) ? string.Empty : Request.Form["p_sCategoryName"].ToString();
             string p_sMode = string.IsNullOrEmpty(Request.Form["p_sMode"]) ? string.Empty : Request.Form["p_sMode"].ToString();
 
             try
             {
-                if (Guid.TryParse(p_sId, out Guid p_uId))
+                bool error = _categoryService.AddUpdateDeleteCategory(p_uId, p_sCategoryName, p_sMode);
+                if (error)
                 {
-                    bool error = _categoryService.AddUpdateDeleteCategory(p_uId, p_sCategoryName, p_sMode);
-                    if (error)
+                    return Json(new
                     {
-                        return Json(new
-                        {
-                            success = true,
-                            message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Record has been insert successfully!" : "Record has been update successfully!",
-                        });
-                    }
-                    else
-                    {
-                        return Json(new
-                        {
-                            success = false,
-                            message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Failed to insert record." : "Failed to update record.",
-                        });
-                    }
+                        success = true,
+                        message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Record has been insert successfully!" : "Record has been update successfully!",
+                    });
                 }
                 else
                 {
@@ -133,30 +120,17 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
         #region Delete Category
         public IActionResult DeleteCategory()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
-           
             try
             {
-                if (Guid.TryParse(p_sId, out Guid p_uId))
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
+                bool error = _categoryService.AddUpdateDeleteCategory(p_uId, string.Empty, "DELETE");
+                if (error)
                 {
-
-                    bool error = _categoryService.AddUpdateDeleteCategory(p_uId, string.Empty, "DELETE");
-                    if (error)
+                    return Json(new
                     {
-                        return Json(new
-                        {
-                            success = true,
-                            message = "Record has been Delete successfully!",
-                        });
-                    }
-                    else
-                    {
-                        return Json(new
-                        {
-                            success = false,
-                            message = "Failed to Delete record.",
-                        });
-                    }
+                        success = true,
+                        message = "Record has been Delete successfully!",
+                    });
                 }
                 else
                 {
@@ -166,7 +140,6 @@ namespace JewelryManagementSystem.Areas.CategoryMst.Controllers
                         message = "Failed to Delete record.",
                     });
                 }
-
             }
             catch (Exception ex)
             {

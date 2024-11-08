@@ -34,11 +34,9 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
         [HttpPost]
         public IActionResult FillSupplier()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
-
             try
             {
-                Guid.TryParse(p_sId, out Guid p_uId);
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
                 DataTable dtSupplier = _supplierService.GetAllSupplier(p_uId);
                 List<SupplierMstModel> supplierList = new List<SupplierMstModel>();
 
@@ -81,7 +79,7 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
         [HttpPost]
         public IActionResult AddUpdateSupplier()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
+            Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
             string p_sName = string.IsNullOrEmpty(Request.Form["p_sName"]) ? string.Empty : Request.Form["p_sName"].ToString();
             string p_sEmails = string.IsNullOrEmpty(Request.Form["p_sEmails"]) ? string.Empty : Request.Form["p_sEmails"].ToString();
             string p_sContact = string.IsNullOrEmpty(Request.Form["p_sContact"]) ? string.Empty : Request.Form["p_sContact"].ToString();
@@ -90,25 +88,14 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
 
             try
             {
-                if (Guid.TryParse(p_sId, out Guid p_uId))
+                bool error = _supplierService.AddUpdateDeleteSupplier(p_uId, p_sName, p_sEmails, p_sContact, p_sAddress, p_sMode);
+                if (error)
                 {
-                    bool error = _supplierService.AddUpdateDeleteSupplier(p_uId, p_sName, p_sEmails, p_sContact, p_sAddress, p_sMode);
-                    if (error)
+                    return Json(new
                     {
-                        return Json(new
-                        {
-                            success = true,
-                            message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Record has been insert successfully!" : "Record has been update successfully!",
-                        });
-                    }
-                    else
-                    {
-                        return Json(new
-                        {
-                            success = false,
-                            message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Failed to insert record." : "Failed to update record.",
-                        });
-                    }
+                        success = true,
+                        message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Record has been insert successfully!" : "Record has been update successfully!",
+                    });
                 }
                 else
                 {
@@ -118,6 +105,7 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
                         message = p_sMode.ToString().ToUpper().Equals("INSERT") ? "Failed to insert record." : "Failed to update record.",
                     });
                 }
+                
             }
             catch (SqlException sqlEx) when (sqlEx.Number == 2627)
             {
@@ -144,30 +132,18 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
         [HttpPost]
         public IActionResult DeleteSupplier()
         {
-            string p_sId = string.IsNullOrEmpty(Request.Form["p_sId"]) ? Guid.Empty.ToString() : Request.Form["p_sId"].ToString();
-
             try
             {
-                if (Guid.TryParse(p_sId, out Guid p_uId))
+                Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
+                bool error = _supplierService.AddUpdateDeleteSupplier(p_uId, string.Empty, string.Empty, string.Empty, string.Empty, "DELETE");
+                
+                if (error)
                 {
-
-                    bool error = _supplierService.AddUpdateDeleteSupplier(p_uId, string.Empty, string.Empty, string.Empty, string.Empty, "DELETE");
-                    if (error)
+                    return Json(new
                     {
-                        return Json(new
-                        {
-                            success = true,
-                            message = "Record has been Delete successfully!",
-                        });
-                    }
-                    else
-                    {
-                        return Json(new
-                        {
-                            success = false,
-                            message = "Failed to Delete record.",
-                        });
-                    }
+                        success = true,
+                        message = "Record has been Delete successfully!",
+                    });
                 }
                 else
                 {
@@ -177,7 +153,6 @@ namespace JewelryManagementSystem.Areas.SupplierMst.Controllers
                         message = "Failed to Delete record.",
                     });
                 }
-
             }
             catch (Exception ex)
             {
