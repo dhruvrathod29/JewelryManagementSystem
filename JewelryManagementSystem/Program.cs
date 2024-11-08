@@ -11,6 +11,7 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddScoped<ICategoryMst, CategoryMstDAL>();
 builder.Services.AddScoped<ISupplierMst, SupplierMstDAL>();
 builder.Services.AddScoped<IProductMst, ProductMstDAL>();
+builder.Services.AddScoped<IIncomingStockMst, IncomingStockMstDAL>();
 
 var app = builder.Build();
 

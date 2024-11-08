@@ -10,7 +10,8 @@
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }
         public int Quantity { get; set; }
-        public DateTime Receiveddate {  get; set; }
+        public string Description {  get; set; }
+        public DateTime ReceivedDate {  get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ModificationDate { get; set; }
 

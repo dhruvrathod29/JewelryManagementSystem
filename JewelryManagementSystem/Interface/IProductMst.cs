@@ -8,7 +8,5 @@ namespace JewelryManagementSystem.Interface
 
         bool AddUpdateDeleteProduct(Guid p_uId, string p_sName, Guid p_uCategoryId, int p_iPrice, string p_sDescription, string p_sMode);
 
-        DataTable ddlFillProduct(Guid p_uId);
-
     }
 }

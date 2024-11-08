@@ -49,23 +49,6 @@ namespace JewelryManagementSystem.DAL
             }
         }
 
-        public DataTable ddlFillProduct(Guid p_uId)
-        {
-            try
-            {
-                SqlParameter[] parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@p_uId", p_uId)
-                };
-
-                DataTable dt = DALHelper.GetDataTable("ProductMst_DropDown_SelectAll", parameters);
-                return dt;
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+       
     }
 }

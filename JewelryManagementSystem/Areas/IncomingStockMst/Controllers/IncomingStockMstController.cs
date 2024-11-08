@@ -1,8 +1,10 @@
-﻿using JewelryManagementSystem.Areas.ProductMst.Models;
+﻿using JewelryManagementSystem.Areas.IncomingStockMst.Models;
+using JewelryManagementSystem.Areas.ProductMst.Models;
 using JewelryManagementSystem.DAL;
 using JewelryManagementSystem.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Data;
 
 namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
@@ -43,32 +45,37 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
             try
             {
                 Guid.TryParse(p_sId, out Guid p_uId);
-                DataTable dtProduct = _incomingStockService.GetAllIncomingStock(p_uId);
+                DataTable dtIncomingStock = _incomingStockService.GetAllIncomingStock(p_uId);
 
 
-                List<ProductMstModel> productList = new List<ProductMstModel>();
+                List<IncomingStockMstModel> incomingStockList = new List<IncomingStockMstModel>();
 
-                //if (dtProduct != null && dtProduct.Rows.Count > 0)
-                //{
-                //    productList = dtProduct
-                //            .Rows.Cast<DataRow>() // Ensure you're working with DataRow objects
-                //            .Select(row => new ProductMstModel
-                //            {
-                //                ID = Guid.TryParse(row["ID"].ToString(), out var guid) ? guid : Guid.Empty,
-                //                Name = CCommon.NullOrEmptyToString(row["NAME"]),
-                //                CategoryID = Guid.TryParse(row["CATEGORYID"].ToString(), out var CategoryId) ? CategoryId : Guid.Empty,
-                //                CategoryName = CCommon.NullOrEmptyToString(row["CATEGORYNAME"]),
-                //                Description = CCommon.NullOrEmptyToString(row["Description"]),
-                //                Price = CCommon.GetInt(row["PRICE"]),
-                //                CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
-                //                ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])
-                //            })
-                //            .ToList();
-                //}
+                if (dtIncomingStock != null && dtIncomingStock.Rows.Count > 0)
+                {
+                    incomingStockList = dtIncomingStock
+                            .Rows.Cast<DataRow>() // Ensure you're working with DataRow objects
+                            .Select(row => new IncomingStockMstModel
+                            {
+                                ID = Guid.TryParse(row["ID"].ToString(), out Guid guid) ? guid : Guid.Empty,
+                                ProductId = Guid.TryParse(row["PRODUCTID"].ToString(), out Guid productid) ? productid : Guid.Empty,
+                                ProductName = CCommon.NullOrEmptyToString(row["PRODUCTNAME"]),
+                                SupplierId = Guid.TryParse(row["SUPPLIERID"].ToString(), out Guid supplierid) ? supplierid : Guid.Empty,
+                                SupplierName = CCommon.NullOrEmptyToString(row["SUPPLIERNAME"]),
+                                CategoryId = Guid.TryParse(row["CATEGORYID"].ToString(), out Guid categoryid) ? categoryid : Guid.Empty,
+                                CategoryName = CCommon.NullOrEmptyToString(row["CATEGORYNAME"]),
+                                Quantity = CCommon.GetInt(row["QUANTITY"]),
+                                Description = CCommon.NullOrEmptyToString(row["DESCRIPTION"]),
+                                ReceivedDate = CCommon.NullOrDefaultDateTime(row["RECEIVEDDATE"]),
+                                CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
+                                ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])
+                                
+                            })
+                            .ToList();
+                }
 
                 return Json(new
                 {
-                    ProductMst = productList
+                    IncomingStockMst = incomingStockList
                 });
 
             }
@@ -90,38 +97,81 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
         {
             try
             {
-                DataTable dtCategory = _categoryService.GetAllCategory(Guid.Empty);
-                DataTable dtSupplier = _supplierService.GetAllSupplier(Guid.Empty);
+                //DataTable dtCategory = _categoryService.GetAllCategory(Guid.Empty);
+                //DataTable dtSupplier = _supplierService.GetAllSupplier(Guid.Empty);
+                //DataTable dtProduct = _productService.ddlFillProduct(Guid.Empty);
+                //dtProduct
+                DataSet ds = _incomingStockService.ddlFillProduct(Guid.Empty);
 
-                if (dtCategory != null && dtCategory.Rows.Count > 0)
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    ViewBag.ddlCategory = dtCategory.AsEnumerable()
+                    if (ds.Tables.Contains("dtCategory"))
+                    {
+                        ViewBag.ddlCategory = ds.Tables["dtCategory"].AsEnumerable()
+                                           .Select(row => new SelectListItem
+                                           {
+                                               Value = row["ID"].ToString(),
+                                               Text = row["NAME"].ToString()
+                                           })
+                                           .ToList();
+                    }
+                    else
+                    {
+                        ViewBag.ddlCategory = new List<SelectListItem>();
+                    }
+
+                    if (ds.Tables.Contains("dtSupplier"))
+                    {
+                        ViewBag.ddlSupplier = ds.Tables["dtSupplier"].AsEnumerable()
                                             .Select(row => new SelectListItem
                                             {
                                                 Value = row["ID"].ToString(),
                                                 Text = row["NAME"].ToString()
                                             })
                                             .ToList();
-                }
-                else
-                {
-                    ViewBag.ddlCategory = new List<SelectListItem>();
+                    }
+                    else
+                    {
+                        ViewBag.ddlSupplier = new List<SelectListItem>();
+                    }
+
+                    if (ds.Tables.Contains("dtProduct"))
+                    {
+                        ViewBag.dtProduct = ds.Tables["dtProduct"];
+                    }
                 }
 
-                if (dtSupplier != null && dtSupplier.Rows.Count > 0)
-                {
-                    ViewBag.ddlSupplier = dtSupplier.AsEnumerable()
-                                            .Select(row => new SelectListItem
-                                            {
-                                                Value = row["ID"].ToString(),
-                                                Text = row["NAME"].ToString()
-                                            })
-                                            .ToList();
-                }
-                else
-                {
-                    ViewBag.ddlSupplier = new List<SelectListItem>();
-                }
+               
+
+                //if (dtCategory != null && dtCategory.Rows.Count > 0)
+                //{
+                //    ViewBag.ddlCategory = dtCategory.AsEnumerable()
+                //                            .Select(row => new SelectListItem
+                //                            {
+                //                                Value = row["ID"].ToString(),
+                //                                Text = row["NAME"].ToString()
+                //                            })
+                //                            .ToList();
+                //}
+                //else
+                //{
+                //    ViewBag.ddlCategory = new List<SelectListItem>();
+                //}
+
+                //if (dtSupplier != null && dtSupplier.Rows.Count > 0)
+                //{
+                //    ViewBag.ddlSupplier = dtSupplier.AsEnumerable()
+                //                            .Select(row => new SelectListItem
+                //                            {
+                //                                Value = row["ID"].ToString(),
+                //                                Text = row["NAME"].ToString()
+                //                            })
+                //                            .ToList();
+                //}
+                //else
+                //{
+                //    ViewBag.ddlSupplier = new List<SelectListItem>();
+                //}
             }
             catch (Exception)
             {
@@ -140,21 +190,21 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
 
             try
             {
-                DataTable dtProduct = _productService.ddlFillProduct(p_uId);
+                DataSet ds = _incomingStockService.ddlFillProduct(p_uId);
 
-                if (dtProduct == null || dtProduct.Rows.Count == 0)
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables.Contains("dtProduct"))
                 {
-                    return Json(new List<SelectListItem>());
+                    var result = ds.Tables["dtProduct"].AsEnumerable()
+                                .Select(row => new SelectListItem
+                                {
+                                    Value = row["ID"].ToString(),
+                                    Text = row["NAME"].ToString(),
+                                }).ToList();
+
+                    return Json(result);
                 }
+                return Json(new List<SelectListItem>());
 
-                var result = dtProduct.AsEnumerable()
-                        .Select(row => new SelectListItem
-                        {
-                            Value = row["ID"].ToString(),
-                            Text = row["NAME"].ToString(),
-                        }).ToList();
-
-                return Json(result);
             }
             catch (Exception)
             {
