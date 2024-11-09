@@ -53,7 +53,7 @@ namespace JewelryManagementSystem.Areas.ProductMst.Controllers
                                 Name = CCommon.NullOrEmptyToString(row["NAME"]),
                                 CategoryID = Guid.TryParse(row["CATEGORYID"].ToString(), out var CategoryId) ? CategoryId : Guid.Empty,
                                 CategoryName = CCommon.NullOrEmptyToString(row["CATEGORYNAME"]),
-                                Description = CCommon.NullOrEmptyToString(row["Description"]),
+                                Description = CCommon.NullOrEmptyToString(row["DESCRIPTION"]),
                                 Price = CCommon.GetInt(row["PRICE"]),
                                 CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
                                 ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])

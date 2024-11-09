@@ -101,11 +101,11 @@ namespace JewelryManagementSystem.Areas.OutgoingStockMst.Controllers
             Guid.TryParse(Request.Form["p_sProductId"], out Guid p_uProductId);
             Guid.TryParse(Request.Form["p_sCustomerId"], out Guid p_uCustomerId);
             int.TryParse(Request.Form["p_iQuantity"], out int p_iQuantity);
-            DateTime.TryParse(Request.Form["p_sReceivedDate"], out DateTime p_dReceivedDate);
+            DateTime.TryParse(Request.Form["p_sSoldDate"], out DateTime p_dSoldDate);
             string p_sMode = string.IsNullOrEmpty(Request.Form["p_sMode"]) ? string.Empty : Request.Form["p_sMode"].ToString();
             try
             {
-                bool error = _outgoingStockService.AddUpdateOutgoingStock(p_uId, p_uProductId, p_uCustomerId, p_iQuantity, p_dReceivedDate, p_sMode);
+                bool error = _outgoingStockService.AddUpdateOutgoingStock(p_uId, p_uProductId, p_uCustomerId, p_iQuantity, p_dSoldDate, p_sMode);
 
                 if (error)
                 {
@@ -147,7 +147,7 @@ namespace JewelryManagementSystem.Areas.OutgoingStockMst.Controllers
 
         #region Delete Incoming Stock
         [HttpPost]
-        public IActionResult DeleteIncomingStock()
+        public IActionResult DeleteOutgoingStock()
         {
             try
             {

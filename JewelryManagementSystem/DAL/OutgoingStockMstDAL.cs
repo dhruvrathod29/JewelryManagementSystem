@@ -25,7 +25,7 @@ namespace JewelryManagementSystem.DAL
             }
         }
 
-        public bool AddUpdateOutgoingStock(Guid p_uId, Guid p_uProductId, Guid p_uCustomerId, int p_iQuantity, DateTime p_dReceivedDate, string p_sMode)
+        public bool AddUpdateOutgoingStock(Guid p_uId, Guid p_uProductId, Guid p_uCustomerId, int p_iQuantity, DateTime p_dSoldDate, string p_sMode)
         {
             try
             {
@@ -35,11 +35,11 @@ namespace JewelryManagementSystem.DAL
                     new SqlParameter("@p_uProductId", p_uProductId),
                     new SqlParameter("@p_uCustomerId", p_uCustomerId),
                     new SqlParameter("@p_iQuantity", p_iQuantity),
-                    new SqlParameter("@p_dReceivedDate", p_dReceivedDate),
+                    new SqlParameter("@p_dSoldDate", p_dSoldDate),
                     new SqlParameter("@p_sMode", p_sMode)
                 };
 
-                int vReturnValue = DALHelper.ExecuteNonQuery("IncomingStockMst_AddUpdateDelete", parameters);
+                int vReturnValue = DALHelper.ExecuteNonQuery("OutgoingStockMst_AddUpdateDelete", parameters);
                 return (vReturnValue == -1 ? false : true);
             }
             catch (Exception)

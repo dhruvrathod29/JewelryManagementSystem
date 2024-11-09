@@ -66,7 +66,7 @@ function FillIncomingStock() {
                 render: function (data) {
                     return `
                         <div class="d-flex align-items-center">
-                            <div class="ms-15">
+                            <div class="ms-10">
                                 <span class="fw-bold">${data}</span>
                             </div>
                         </div>

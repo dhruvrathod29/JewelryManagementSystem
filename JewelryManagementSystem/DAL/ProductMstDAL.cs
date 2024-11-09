@@ -1,10 +1,11 @@
 ﻿using JewelryManagementSystem.Interface;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace JewelryManagementSystem.DAL
 {
-    public class ProductMstDAL : IProductMst
+	public class ProductMstDAL : IProductMst
     {
         public DataTable GetAllProduct(Guid p_uId)
         {
@@ -97,6 +98,18 @@ namespace JewelryManagementSystem.DAL
             }
         }
 
-       
-    }
+		public DataTable GetAllAvailableStock()
+		{
+			try
+			{
+				DataTable dt = DALHelper.GetDataTable("AvailableStockMst_SelectAll");
+				return dt;
+
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+	}
 }

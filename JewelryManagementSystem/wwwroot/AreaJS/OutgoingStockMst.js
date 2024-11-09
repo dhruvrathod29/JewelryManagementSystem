@@ -66,7 +66,7 @@ function FillOutgoingStock() {
                 render: function (data) {
                     return `
                         <div class="d-flex align-items-center">
-                            <div class="ms-15">
+                            <div class="ms-10">
                                 <span class="fw-bold">${data}</span>
                             </div>
                         </div>
@@ -201,52 +201,50 @@ function btnNewOutgoingStock() {
 }
 function btnOutgoingStockSave(p_sMode) {
 
-    if (!$('#ddlIncomingCategory').val()) {
+    if (!$('#ddlOutgoingCategory').val()) {
         toastr.error('Category is required.', '', { timeOut: 5000 });
-        $('#ddlIncomingCategory').addClass('is-invalid');
-        $('#ddlIncomingCategory').focus();
+        $('#ddlOutgoingCategory').addClass('is-invalid');
+        $('#ddlOutgoingCategory').focus();
         return;
     }
     else {
-        $('#ddlIncomingCategory').removeClass('is-invalid');
+        $('#ddlOutgoingCategory').removeClass('is-invalid');
     }
 
-    if (!$('#ddlIncomingSupplier').val()) {
-        toastr.error('Supplier is required.', '', { timeOut: 5000 });
-        $('#ddlIncomingSupplier').addClass('is-invalid');
-        $('#ddlIncomingSupplier').focus();
+    if (!$('#ddlOutgoingCustomer').val()) {
+        toastr.error('Customer is required.', '', { timeOut: 5000 });
+        $('#ddlOutgoingCustomer').addClass('is-invalid');
+        $('#ddlOutgoingCustomer').focus();
         return;
     }
     else {
-        $('#ddlIncomingSupplier').removeClass('is-invalid');
+        $('#ddlOutgoingCustomer').removeClass('is-invalid');
     }
 
-    if (!$('#ddlIncomingProduct').val()) {
+    if (!$('#ddlOutgoingProduct').val()) {
         toastr.error('Product is required.', '', { timeOut: 5000 });
-        $('#ddlIncomingProduct').addClass('is-invalid');
-        $('#ddlIncomingProduct').focus();
+        $('#ddlOutgoingProduct').addClass('is-invalid');
+        $('#ddlOutgoingProduct').focus();
         return;
     }
     else {
-        $('#ddlIncomingProduct').removeClass('is-invalid');
+        $('#ddlOutgoingProduct').removeClass('is-invalid');
     }
 
-
-
-
-    if (!$('#txtIncomingQuantity').val()) {
+    if (!$('#txtOutgoingQuantity').val()) {
         toastr.error('Quantity is required.', '', { timeOut: 5000 });
-        $('#txtIncomingQuantity').addClass('is-invalid');
-        $('#txtIncomingQuantity').focus();
+        $('#txtOutgoingQuantity').addClass('is-invalid');
+        $('#txtOutgoingQuantity').focus();
         return;
     }
     else {
-        $('#txtIncomingQuantity').removeClass('is-invalid');
+        $('#txtOutgoingQuantity').removeClass('is-invalid');
     }
-    if (!$('#txtIncomingReceivedDate').val()) {
-        toastr.error('Received Date is required.', '', { timeOut: 5000 });
-        $('#txtIncomingReceivedDate').addClass('is-invalid');
-        $('#txtIncomingReceivedDate').focus();
+
+    if (!$('#txtOutgoingSoldDate').val()) {
+        toastr.error('Sold Date is required.', '', { timeOut: 5000 });
+        $('#txtOutgoingSoldDate').addClass('is-invalid');
+        $('#txtOutgoingSoldDate').focus();
         return;
     }
     else {
@@ -254,16 +252,16 @@ function btnOutgoingStockSave(p_sMode) {
     }
 
     formData = new FormData();
-    formData.append('p_sId', p_sMode == "INSERT" ? "" : $('#IncomingStockID').val());
-    formData.append('p_sProductId', $('#ddlIncomingProduct').val());
-    formData.append('p_sSupplierId', $('#ddlIncomingSupplier').val());
-    formData.append('p_iQuantity', $('#txtIncomingQuantity').val());
-    formData.append('p_sReceivedDate', formatDate($('#txtIncomingReceivedDate').val()));
+    formData.append('p_sId', p_sMode == "INSERT" ? "" : $('#OutgoingStockID').val());
+    formData.append('p_sProductId', $('#ddlOutgoingProduct').val());
+    formData.append('p_sCustomerId', $('#ddlOutgoingCustomer').val());
+    formData.append('p_iQuantity', $('#txtOutgoingQuantity').val());
+    formData.append('p_sSoldDate', formatDate($('#txtOutgoingSoldDate').val()));
     formData.append('p_sMode', p_sMode);
 
     $.ajax({
         type: "POST",
-        url: "/IncomingStockMst/IncomingStockMst/AddUpdateIncomingStock",
+        url: "/OutgoingStockMst/OutgoingStockMst/AddUpdateOutgoingStock",
         data: formData,
         processData: false,
         contentType: false,
@@ -272,8 +270,8 @@ function btnOutgoingStockSave(p_sMode) {
             if (respone != null && respone.success == true) {
 
                 successMessage(respone.message, true);
-                $('#IncomingStock_modal').modal('hide');
-                FillIncomingStock();
+                $('#OutgoingStock_modal').modal('hide');
+                FillOutgoingStock();
             }
             else {
                 errorMessage(respone.message, false);
@@ -291,23 +289,23 @@ function btnEdit(id) {
     formData.append('p_sId', id);
     $.ajax({
         type: "POST",
-        url: "/IncomingStockMst/IncomingStockMst/FillIncomingStock",
+        url: "/OutgoingStockMst/OutgoingStockMst/FillOutgoingStock",
         data: formData,
         processData: false,
         contentType: false,
         success: function (result) {
-            if (result && result.incomingStockMst) {
-
-                $('#IncomingStockID').val(id);
-                $('#IncomingStockHeader').text('Edit Category');
-                $('#ddlIncomingCategory').removeClass('is-invalid');
-                $('#ddlIncomingSupplier').removeClass('is-invalid');
-                $('#ddlIncomingProduct').removeClass('is-invalid');
-                $('#txtIncomingQuantity').removeClass('is-invalid');
-                $('#txtIncomingReceivedDate').removeClass('is-invalid');
-                $('#btnIncomingStockSave').hide();
-                $('#btnIncomingStockUpdate').show();
-                EditIncomingStockData(result.incomingStockMst[0]);
+            if (result && result.outgoingStockMst) {
+                debugger;
+                $('#OutgoingStockID').val(id);
+                $('#OutgoingStockHeader').text('Edit Outgoing Stock');
+                $('#ddlOutgoingCategory').removeClass('is-invalid');
+                $('#ddlOutgoingCustomer').removeClass('is-invalid');
+                $('#ddlOutgoingProduct').removeClass('is-invalid');
+                $('#txtOutgoingQuantity').removeClass('is-invalid');
+                $('#txtOutgoingSoldDate').removeClass('is-invalid');
+                $('#btnOutgoingStockSave').hide();
+                $('#btnOutgoingStockUpdate').show();
+                EditOutgoingStockData(result.outgoingStockMst[0]);
             }
         },
         error: function (req, status, message) {
@@ -315,16 +313,16 @@ function btnEdit(id) {
         }
     });
 }
-async function EditIncomingStockData(incomingStockMst) {
-    $('#ddlIncomingCategory').val(incomingStockMst.categoryId);
-    await ddlFillProduct();
-    $('#ddlIncomingSupplier').val(incomingStockMst.supplierId);
-    $('#ddlIncomingProduct').val(incomingStockMst.productId);
-    $('#txtIncomingPrice').val(incomingStockMst.price);
-    $('#txtIncomingDescription').val(incomingStockMst.description);
-    $('#txtIncomingQuantity').val(incomingStockMst.quantity);
-    $('#txtIncomingReceivedDate').val(incomingStockMst.receivedDate);
-    $('#IncomingStock_modal').modal('show');
+async function EditOutgoingStockData(outgoingStockMst) {
+    $('#ddlOutgoingCategory').val(outgoingStockMst.categoryId);
+    await ddlFillOutgoingProduct();
+    $('#ddlOutgoingCustomer').val(outgoingStockMst.customerId);
+    $('#ddlOutgoingProduct').val(outgoingStockMst.productId);
+    $('#txtOutgoingPrice').val(outgoingStockMst.price);
+    $('#txtOutgoingDescription').val(outgoingStockMst.description);
+    $('#txtOutgoingQuantity').val(outgoingStockMst.quantity);
+    $('#txtOutgoingSoldDate').val(outgoingStockMst.soldDate);
+    $('#OutgoingStock_modal').modal('show');
 }
 function btnDelete(id) {
 
@@ -343,14 +341,14 @@ function btnDelete(id) {
         if (result.isConfirmed) {
             $.ajax({
                 type: "POST",
-                url: "/IncomingStockMst/IncomingStockMst/DeleteIncomingStock",
+                url: "/OutgoingStockMst/OutgoingStockMst/DeleteOutgoingStock",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
                     if (response != null && response.success == true) {
                         successMessage(response.message, true);
-                        FillIncomingStock();
+                        FillOutgoingStock();
                     } else {
                         Swal.fire({
                             title: "Error!",
@@ -370,26 +368,27 @@ function btnDelete(id) {
         }
     });
 }
-function ddlFillProduct() {
+function ddlFillOutgoingProduct() {
     return new Promise((resolve, reject) => {
-
-        if ($("#ddlIncomingCategory").val() != "") {
-            $("#ddlIncomingProduct").empty();
-            $("#ddlIncomingProduct").append($("<option></option>").val("").html("--Select Product--"));
+        debugger;
+        if ($("#ddlOutgoingCategory").val() != "") {
+            $("#ddlOutgoingProduct").empty();
+            $("#ddlOutgoingProduct").append($("<option></option>").val("").html("--Select Product--"));
 
             formData = new FormData();
-            formData.append('p_sId', $("#ddlIncomingCategory").val());
+            formData.append('p_sId', $("#ddlOutgoingCategory").val());
 
             $.ajax({
                 type: "POST",
-                url: "/IncomingStockMst/IncomingStockMst/ddlFillProduct",
+                url: "/OutgoingStockMst/OutgoingStockMst/ddlFillProduct",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (result) {
                     if (result != null) {
+                        debugger;
                         $.each(result, function (key, value) {
-                            $("#ddlIncomingProduct").append($("<option></option>").val(value.value).html(value.text));
+                            $("#ddlOutgoingProduct").append($("<option></option>").val(value.value).html(value.text));
                         });
                         resolve();  // Resolve the Promise after dropdown is populated
                     } else {
@@ -401,28 +400,28 @@ function ddlFillProduct() {
                 }
             });
         } else {
-            $("#ddlIncomingProduct").empty();
-            $("#ddlIncomingProduct").append($("<option></option>").val("").html("--Select Product--"));
-            $("#txtIncomingDescription").val('');
-            $("#txtIncomingPrice").val('');
+            $("#ddlOutgoingProduct").empty();
+            $("#ddlOutgoingProduct").append($("<option></option>").val("").html("--Select Product--"));
+            $("#txtOutgoingDescription").val('');
+            $("#txtOutgoingPrice").val('');
             resolve();  // Resolve immediately if there's no category selected
         }
     });
 }
-function FillDescription() {
+function FillOutgoingStockDescription() {
 
-    var productId = $("#ddlIncomingProduct").val();
+    var productId = $("#ddlOutgoingProduct").val();
     var Product = dtProduct.find(function (product) {
         return product.ID === productId;
     });
 
     if (Product) {
-        $("#txtIncomingDescription").val(Product.DESCRIPTION);
-        $("#txtIncomingPrice").val(Product.PRICE);
+        $("#txtOutgoingDescription").val(Product.DESCRIPTION);
+        $("#txtOutgoingPrice").val(Product.PRICE);
 
     } else {
-        $("#txtIncomingDescription").val('');
-        $("#txtIncomingPrice").val('');
+        $("#txtOutgoingDescription").val('');
+        $("#txtOutgoingPrice").val('');
 
     }
 }
