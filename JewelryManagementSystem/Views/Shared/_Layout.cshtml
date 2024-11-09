@@ -144,7 +144,7 @@
 										</div>
 
 										<div class="menu-item">
-											<a class="menu-link" href="../../demo1/dist/account/billing.html">
+											<a class="menu-link" asp-area="OutgoingStockMst" asp-controller="OutgoingStockMst" asp-action="Index">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -170,7 +170,7 @@
 											</a>
 										</div>
 										<div class="menu-item">
-											<a class="menu-link" href="../../demo1/dist/account/statements.html">
+											<a class="menu-link" asp-area="CustomerMst" asp-controller="CustomerMst" asp-action="Index">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -180,14 +180,11 @@
 										
 									</div>
 								</div>
-
-
 								<div class="menu-item pt-5">
 									<div class="menu-content">
 										<span class="menu-heading fw-bold text-uppercase fs-7">Pages</span>
 									</div>
 								</div>
-								
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 									<span class="menu-link">
 										<span class="menu-icon">
@@ -273,25 +270,14 @@
 					<div class="d-flex flex-column flex-column-fluid">
 						@RenderBody()
 					</div>
-					@* <div id="kt_app_footer" class="app-footer">
+					<div id="kt_app_footer" class="app-footer">
 						<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
 							<div class="text-dark order-2 order-md-1">
 								<span class="text-muted fw-semibold me-1">2024©</span>
-								<a href="#" target="_blank" class="text-gray-800 text-hover-primary">Dhruv Rathod</a>
+								<a href="https://github.com/dhruvrathod29" target="_blank" class="text-gray-800 text-hover-primary">Dhruv Rathod</a>
 							</div>
-							<ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-								<li class="menu-item">
-									<a href="#" target="_blank" class="menu-link px-2">About</a>
-								</li>
-								<li class="menu-item">
-									<a href="#" target="_blank" class="menu-link px-2">Support</a>
-								</li>
-								<li class="menu-item">
-									<a href="#" target="_blank" class="menu-link px-2">Purchase</a>
-								</li>
-							</ul>
 						</div>
-					</div> *@
+					</div>
 				</div>
 			</div>
 		</div>

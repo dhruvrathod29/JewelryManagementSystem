@@ -1,15 +1,15 @@
 ﻿$(document).ready(function () {
-    FillSupplierData();
+    FillCustomer();
 });
 
-function FillSupplierData() {
+function FillCustomer() {
 
     // Check if the DataTable is already initialized
-    if ($.fn.DataTable.isDataTable('#Supplier_table')) {
-        $('#Supplier_table').DataTable().clear().destroy();
+    if ($.fn.DataTable.isDataTable('#Customer_table')) {
+        $('#Customer_table').DataTable().clear().destroy();
     }
 
-    let dataTable = $('#Supplier_table').DataTable({
+    let dataTable = $('#Customer_table').DataTable({
         processing: true,
         serverSide: false,
         data: [], // Will be populated via AJAX
@@ -74,14 +74,6 @@ function FillSupplierData() {
                             </div>
                         </div>
                     `;
-
-                    //return `
-                    //    <div class="d-flex align-items-center">
-                    //        <div class="ms-10">
-                    //            <span class="fw-bold">${data && data.trim() ? data : '-'}</span>
-                    //        </div>
-                    //    </div>
-                    //`;
                 }
             },
             {
@@ -140,13 +132,13 @@ function FillSupplierData() {
 
     $.ajax({
         type: "POST",
-        url: "/SupplierMst/SupplierMst/FillSupplier",
+        url: "/CustomerMst/CustomerMst/FillCustomer",
         data: formData,
         processData: false,
         contentType: false,
         success: function (result) {
             if (result != null) {
-                dataTable.clear().rows.add(result.supplierMst).draw();
+                dataTable.clear().rows.add(result.customerMst).draw();
             }
         },
         error: function (req, status, message) {
@@ -155,122 +147,122 @@ function FillSupplierData() {
 
     });
 
-    $('input[data-supplier-filter="search"]').on('keyup change clear', function () {
+    $('input[data-customer-filter="search"]').on('keyup change clear', function () {
         const searchTerm = $(this).val();
         dataTable.search(searchTerm).draw();
     });
 }
 
-function btnNewSupplier() {
-    $('#SupplierHeader').text('Add Supplier');
-    $('#txtSupplierName').val('');
-    $('#txtSupplierName').removeClass('is-invalid');
-    $('#txtSupplierEmails').val('');
-    $('#txtSupplierEmails').removeClass('is-invalid');
-    $('#txtSupplierContact').val('');
-    $('#txtSupplierContact').removeClass('is-invalid');
-    $('#txtSupplierAddress').val('');
-    $('#txtSupplierAddress').removeClass('is-invalid');
-    $('#btnSupplierSave').show();
-    $('#btnSupplierUpdate').hide();
-    $('#supplier_modal').modal('show');
+function btnNewCustomer() {
+    $('#CustomerHeader').text('Add Customer');
+    $('#txtCustomerName').val('');
+    $('#txtCustomerName').removeClass('is-invalid');
+    $('#txtCustomerEmails').val('');
+    $('#txtCustomerEmails').removeClass('is-invalid');
+    $('#txtCustomerContact').val('');
+    $('#txtCustomerContact').removeClass('is-invalid');
+    $('#txtCustomerAddress').val('');
+    $('#txtCustomerAddress').removeClass('is-invalid');
+    $('#btnCustomerSave').show();
+    $('#btnCustomerUpdate').hide();
+    $('#Customer_modal').modal('show');
 }
 
-function btnSupplierSave(p_sMode) {
-    
-    if (!$('#txtSupplierName').val()) {
+function btnCustomerSave(p_sMode) {
+
+    if (!$('#txtCustomerName').val()) {
         toastr.error('Name is required.', '', { timeOut: 5000 });
-        $('#txtSupplierName').addClass('is-invalid');
-        $('#txtSupplierName').focus();
+        $('#txtCustomerName').addClass('is-invalid');
+        $('#txtCustomerName').focus();
         return;
     }
     else {
-        $('#txtSupplierName').removeClass('is-invalid');
+        $('#txtCustomerName').removeClass('is-invalid');
     }
 
-    if ($('#txtSupplierEmails').val() != "") {
-        if (!validateEmail($('#txtSupplierEmails').val())) {
+    if ($('#txtCustomerEmails').val() != "") {
+        if (!validateEmail($('#txtCustomerEmails').val())) {
             toastr.error('Emails is not valid.', '', { timeOut: 5000 });
-            $('#txtSupplierEmails').addClass('is-invalid');
-            $('#txtSupplierEmails').focus();
+            $('#txtCustomerEmails').addClass('is-invalid');
+            $('#txtCustomerEmails').focus();
             return;
         }
     }
     else {
-        $('#txtSupplierEmails').removeClass('is-invalid');
+        $('#txtCustomerEmails').removeClass('is-invalid');
     }
 
-    if ($('#txtSupplierContact').val() != "") {
-        if (!isValidNumber($('#txtSupplierContact').val())) {
+    if ($('#txtCustomerContact').val() != "") {
+        if (!isValidNumber($('#txtCustomerContact').val())) {
             toastr.error('Contact is not valid.', '', { timeOut: 5000 });
-            $('#txtSupplierContact').addClass('is-invalid');
-            $('#txtSupplierContact').focus();
+            $('#txtCustomerContact').addClass('is-invalid');
+            $('#txtCustomerContact').focus();
             return;
         }
     }
     else {
-        $('#txtSupplierContact').removeClass('is-invalid');
+        $('#txtCustomerContact').removeClass('is-invalid');
     }
 
     formData = new FormData();
-    formData.append('p_sId', p_sMode == "INSERT" ? "" : $('#SupplierID').val());
-    formData.append('p_sName', $('#txtSupplierName').val());
-    formData.append('p_sEmails', $('#txtSupplierEmails').val());
-    formData.append('p_sContact', $('#txtSupplierContact').val());
-    formData.append('p_sAddress', $('#txtSupplierAddress').val());
+    formData.append('p_sId', p_sMode == "INSERT" ? "" : $('#CustomerID').val());
+    formData.append('p_sName', $('#txtCustomerName').val());
+    formData.append('p_sEmails', $('#txtCustomerEmails').val());
+    formData.append('p_sContact', $('#txtCustomerContact').val());
+    formData.append('p_sAddress', $('#txtCustomerAddress').val());
     formData.append('p_sMode', p_sMode);
 
     $.ajax({
         type: "POST",
-        url: "/SupplierMst/SupplierMst/AddUpdateSupplier",
+        url: "/CustomerMst/CustomerMst/AddUpdateCustomer",
         data: formData,
         processData: false,
         contentType: false,
         success: function (respone) {
-            
+
             if (respone != null && respone.success == true) {
-                
+
                 successMessage(respone.message, true);
-                $('#supplier_modal').modal('hide');
-                FillSupplierData();
+                $('#Customer_modal').modal('hide');
+                FillCustomer();
             }
             else {
                 errorMessage(respone.message, false);
             }
         },
         error: function (req, status, error) {
-            
+
             errorMessage(error, status)
         }
     });
 }
 
 function btnEdit(id) {
-    
+
     formData = new FormData();
     formData.append('p_sId', id);
     $.ajax({
         type: "POST",
-        url: "/SupplierMst/SupplierMst/FillSupplier",
+        url: "/CustomerMst/CustomerMst/FillCustomer",
         data: formData,
         processData: false,
         contentType: false,
         success: function (result) {
-            if (result && result.supplierMst) {
-                
-                $('#SupplierID').val(id);
-                $('#SupplierHeader').text('Edit Supplier');
-                $('#txtSupplierName').removeClass('is-invalid');
-                $('#txtSupplierEmails').removeClass('is-invalid');
-                $('#txtSupplierContact').removeClass('is-invalid');
-                $('#txtSupplierAddress').removeClass('is-invalid');
-                $('#btnSupplierSave').hide();
-                $('#btnSupplierUpdate').show();
-                $('#txtSupplierName').val(result.supplierMst[0].name);
-                $('#txtSupplierEmails').val(result.supplierMst[0].emails);
-                $('#txtSupplierContact').val(result.supplierMst[0].contact);
-                $('#txtSupplierAddress').val(result.supplierMst[0].address);
-                $('#supplier_modal').modal('show');
+            if (result && result.customerMst) {
+
+                $('#CustomerID').val(id);
+                $('#CustomerHeader').text('Edit Customer');
+                $('#txtCustomerName').removeClass('is-invalid');
+                $('#txtCustomerEmails').removeClass('is-invalid');
+                $('#txtCustomerContact').removeClass('is-invalid');
+                $('#txtCustomerAddress').removeClass('is-invalid');
+                $('#btnCustomerSave').hide();
+                $('#btnCustomerUpdate').show();
+                $('#txtCustomerName').val(result.customerMst[0].name);
+                $('#txtCustomerEmails').val(result.customerMst[0].emails);
+                $('#txtCustomerContact').val(result.customerMst[0].contact);
+                $('#txtCustomerAddress').val(result.customerMst[0].address);
+                $('#Customer_modal').modal('show');
             }
         },
         error: function (req, status, message) {
@@ -280,7 +272,7 @@ function btnEdit(id) {
 }
 
 function btnDelete(id) {
-    
+
     var formData = new FormData();
     formData.append('p_sId', id);
 
@@ -296,16 +288,16 @@ function btnDelete(id) {
         if (result.isConfirmed) {
             $.ajax({
                 type: "POST",
-                url: "/SupplierMst/SupplierMst/DeleteSupplier",
+                url: "/CustomerMst/CustomerMst/DeleteCustomer",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
 
                     if (response != null && response.success == true) {
-                        
+
                         successMessage(response.message, true);
-                        FillSupplierData();
+                        FillCustomer();
                     } else {
                         Swal.fire({
                             title: "Error!",

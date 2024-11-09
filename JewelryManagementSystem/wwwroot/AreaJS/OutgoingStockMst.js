@@ -1,18 +1,18 @@
 ﻿var dtProduct = dtProduct;
 
 $(document).ready(function () {
-    
-    FillIncomingStock();
+
+    FillOutgoingStock();
 });
 
-function FillIncomingStock() {
+function FillOutgoingStock() {
 
     // Check if the DataTable is already initialized
-    if ($.fn.DataTable.isDataTable('#IncomingStock_table')) {
-        $('#IncomingStock_table').DataTable().clear().destroy();
+    if ($.fn.DataTable.isDataTable('#OutgoingStock_table')) {
+        $('#OutgoingStock_table').DataTable().clear().destroy();
     }
 
-    let dataTable = $('#IncomingStock_table').DataTable({
+    let dataTable = $('#OutgoingStock_table').DataTable({
         processing: false,
         serverSide: false,
         scrollX: true,
@@ -100,7 +100,7 @@ function FillIncomingStock() {
                 }
             },
             {
-                data: 'supplierName',
+                data: 'customerName',
                 className: 'text-center',
                 render: function (data) {
                     return `
@@ -112,9 +112,9 @@ function FillIncomingStock() {
                     `;
                 }
             },
-            
+
             {
-                data: 'receivedDate',
+                data: 'soldDate',
                 className: 'text-center',
                 render: function (data) {
                     const date = new Date(data);
@@ -159,47 +159,47 @@ function FillIncomingStock() {
 
     $.ajax({
         type: "POST",
-        url: "/IncomingStockMst/IncomingStockMst/FillIncomingStock",
+        url: "/OutgoingStockMst/OutgoingStockMst/FillOutgoingStock",
         data: formData,
         processData: false,
         contentType: false,
         success: function (result) {
             if (result != null) {
-                
-                dataTable.clear().rows.add(result.incomingStockMst).draw();
+
+                dataTable.clear().rows.add(result.outgoingStockMst).draw();
             }
         },
         error: function (req, status, message) {
             errorMessage(message, status)
         }
     });
-    $('input[data-incomingstock-filter="search"]').on('keyup change clear', function () {
+    $('input[data-outgoingstock-filter="search"]').on('keyup change clear', function () {
         const searchTerm = $(this).val();
         dataTable.search(searchTerm).draw();
     });
 }
-function btnNewIncomingStock() {
-    $("#IncomingStockHeader").text("Add Incoming Stock");
-    $("#ddlIncomingCategory").val('');
-    $('#ddlIncomingCategory').removeClass('is-invalid');
-    $("#ddlIncomingProduct").empty();
-    $("#ddlIncomingProduct").append($("<option></option>").val("").html("--Select Product--"));
-    $('#ddlIncomingProduct').removeClass('is-invalid');
-    $("#txtIncomingDescription").val('');
-    $('#txtIncomingDescription').removeClass('is-invalid');
-    $("#txtIncomingPrice").val('');
-    $('#txtIncomingPrice').removeClass('is-invalid');
-    $("#ddlIncomingSupplier").val('');
-    $('#ddlIncomingSupplier').removeClass('is-invalid');
-    $("#txtIncomingQuantity").val('');
-    $('#txtIncomingQuantity').removeClass('is-invalid');
-    $("#txtIncomingReceivedDate").val('');
-    $('#txtIncomingReceivedDate').removeClass('is-invalid');
-    $('#btnIncomingStockSave').show();
-    $('#btnIncomingStockUpdate').hide();
-    $('#IncomingStock_modal').modal('show');
+function btnNewOutgoingStock() {
+    $("#OutgoingStockHeader").text("Add Outgoing Stock");
+    $("#ddlOutgoingCategory").val('');
+    $('#ddlOutgoingCategory').removeClass('is-invalid');
+    $("#ddlOutgoingProduct").empty();
+    $("#ddlOutgoingProduct").append($("<option></option>").val("").html("--Select Product--"));
+    $('#ddlOutgoingProduct').removeClass('is-invalid');
+    $("#txtOutgoingDescription").val('');
+    $('#txtOutgoingDescription').removeClass('is-invalid');
+    $("#txtOutgoingPrice").val('');
+    $('#txtOutgoingPrice').removeClass('is-invalid');
+    $("#ddlOutgoingCustomer").val('');
+    $('#ddlOutgoingCustomer').removeClass('is-invalid');
+    $("#txtOutgoingQuantity").val('');
+    $('#txtOutgoingQuantity').removeClass('is-invalid');
+    $("#txtOutgoingSoldDate").val('');
+    $('#txtOutgoingSoldDate').removeClass('is-invalid');
+    $('#btnOutgoingStockSave').show();
+    $('#btnOutgoingStockUpdate').hide();
+    $('#OutgoingStock_modal').modal('show');
 }
-function btnIncomingStockSave(p_sMode) {
+function btnOutgoingStockSave(p_sMode) {
 
     if (!$('#ddlIncomingCategory').val()) {
         toastr.error('Category is required.', '', { timeOut: 5000 });
@@ -232,7 +232,7 @@ function btnIncomingStockSave(p_sMode) {
     }
 
 
-    
+
 
     if (!$('#txtIncomingQuantity').val()) {
         toastr.error('Quantity is required.', '', { timeOut: 5000 });
@@ -260,7 +260,7 @@ function btnIncomingStockSave(p_sMode) {
     formData.append('p_iQuantity', $('#txtIncomingQuantity').val());
     formData.append('p_sReceivedDate', formatDate($('#txtIncomingReceivedDate').val()));
     formData.append('p_sMode', p_sMode);
-    
+
     $.ajax({
         type: "POST",
         url: "/IncomingStockMst/IncomingStockMst/AddUpdateIncomingStock",
@@ -286,7 +286,7 @@ function btnIncomingStockSave(p_sMode) {
     });
 }
 function btnEdit(id) {
-    
+
     formData = new FormData();
     formData.append('p_sId', id);
     $.ajax({
@@ -297,7 +297,7 @@ function btnEdit(id) {
         contentType: false,
         success: function (result) {
             if (result && result.incomingStockMst) {
-                
+
                 $('#IncomingStockID').val(id);
                 $('#IncomingStockHeader').text('Edit Category');
                 $('#ddlIncomingCategory').removeClass('is-invalid');
@@ -372,7 +372,7 @@ function btnDelete(id) {
 }
 function ddlFillProduct() {
     return new Promise((resolve, reject) => {
-        
+
         if ($("#ddlIncomingCategory").val() != "") {
             $("#ddlIncomingProduct").empty();
             $("#ddlIncomingProduct").append($("<option></option>").val("").html("--Select Product--"));
@@ -410,7 +410,7 @@ function ddlFillProduct() {
     });
 }
 function FillDescription() {
-    
+
     var productId = $("#ddlIncomingProduct").val();
     var Product = dtProduct.find(function (product) {
         return product.ID === productId;
@@ -423,6 +423,6 @@ function FillDescription() {
     } else {
         $("#txtIncomingDescription").val('');
         $("#txtIncomingPrice").val('');
-        
+
     }
 }

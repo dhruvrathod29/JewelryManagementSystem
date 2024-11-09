@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
+    <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
+        <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0"></h1>
+        </div>
+
+    </div>
+</div>
+
+<div id="kt_app_content" class="app-content flex-column-fluid">
+    <div id="kt_app_content_container" class="app-container container-xxl">
+        <div class="card card-flush">
+            <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+                <div class="card-title">
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Customer List</h1>
+                    </div>
+                </div>
+                <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <span class="svg-icon svg-icon-1 position-absolute ms-4">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <input type="text" data-customer-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search Order" />
+                    </div>
+                    <button type="button" class="btn btn-sm btn-flex btn-light-primary" onclick="btnNewCustomer()">
+                        <span class="svg-icon svg-icon-3">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                            </svg>
+                        </span>
+                        Add Customer
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body pt-0">
+                <table class="table align-middle table-row-dashed fs-6 gy-5" id="Customer_table">
+                    <thead>
+                        <tr class="text-start text-gray-800 fw-bold fs-7 text-uppercase gs-0">
+                            <th class="text-center min-w-100px">Name</th>
+                            <th class="text-center min-w-100px">Emails</th>
+                            <th class="text-center min-w-100px">Contact</th>
+                            <th class="text-center min-w-100px">Address</th>
+                            <th class="text-center min-w-100px">Create Date</th>
+                            <th class="text-center min-w-100px">modified Date</th>
+                            <th class="text-center min-w-100px">Actions</th>
+                        </tr>
+                    </thead>
+
+                </table>
+                <div class="d-flex align-items-center p-5">
+                    <img src="~/src/media/loader/newLoader.gif" class="lds-ellipsis" id="loader-spinner" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Customer_modal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mw-600px">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <span class="svg-icon svg-icon-1">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                <form id="CustomerForm" class="form" action="#" method="post">
+                    <input type="hidden" id="CustomerID" />
+                    <div class="mb-13 text-left">
+                        <h4 class="mb-3" id="CustomerHeader"></h4>
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Name</span>
+                        </label>
+                        <input type="text" id="txtCustomerName" tabindex="1" class="form-control" placeholder="Enter Name" required />
+                    </div>
+
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Emails</span>
+                        </label>
+                        <input type="email" id="txtCustomerEmails" tabindex="1" class="form-control" placeholder="Enter Emails" required />
+                    </div>
+
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-6 fv-row">
+
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span class="required">Contact</span>
+                            </label>
+                            <input type="tel" id="txtCustomerContact" maxlength="10" minlength="10" pattern="\d{10}" tabindex="1" class="form-control"
+                                   placeholder="Enter Contact" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                        </div>
+                        <div class="col-md-6 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span class="required">Address</span>
+                            </label>
+                            <input type="text" id="txtCustomerAddress" tabindex="1" class="form-control" placeholder="Enter Address" required />
+                        </div>
+
+                    </div>
+                    <div class="d-flex justify-content-end pt-7">
+                        <button type="reset" id="kt_modal_new_target_cancel" tabindex="2" data-bs-dismiss="modal" class="btn btn-light me-3">Cancel</button>
+                        <a id="btnCustomerSave" value="Submit" tabindex="1" class="btn btn-primary" onclick="btnCustomerSave('INSERT')">Submit</a>
+                        <a id="btnCustomerUpdate" class="btn btn-primary" onclick="btnCustomerSave('UPDATE')">update</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/areajs/Customer.js"></script>
+}

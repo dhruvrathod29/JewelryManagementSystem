@@ -1,13 +1,12 @@
-﻿using JewelryManagementSystem.Interface;
-using System;
+﻿using System.Data.SqlClient;
 using System.Data;
-using System.Data.SqlClient;
+using JewelryManagementSystem.Interface;
 
 namespace JewelryManagementSystem.DAL
 {
-    public class IncomingStockMstDAL : IIncomingStockMst
+    public class OutgoingStockMstDAL : IOutgoingStockMst
     {
-        public DataTable GetAllIncomingStock(Guid p_uId)
+        public DataTable GetAllOutgoingStock(Guid p_uId)
         {
             try
             {
@@ -16,7 +15,7 @@ namespace JewelryManagementSystem.DAL
                     new SqlParameter("@p_uId", p_uId)
                 };
 
-                DataTable dt = DALHelper.GetDataTable("IncomingStockMst_SelectAll", parameters);
+                DataTable dt = DALHelper.GetDataTable("OutgoingStockMst_SelectAll", parameters);
                 return dt;
 
             }
@@ -25,8 +24,8 @@ namespace JewelryManagementSystem.DAL
                 throw;
             }
         }
-        
-        public bool AddUpdateIncomingStock(Guid p_uId, Guid p_uProductId, Guid p_uSupplierId, int p_iQuantity, DateTime p_dReceivedDate, string p_sMode)
+
+        public bool AddUpdateOutgoingStock(Guid p_uId, Guid p_uProductId, Guid p_uCustomerId, int p_iQuantity, DateTime p_dReceivedDate, string p_sMode)
         {
             try
             {
@@ -34,7 +33,7 @@ namespace JewelryManagementSystem.DAL
                 {
                     new SqlParameter("@p_uId", p_uId),
                     new SqlParameter("@p_uProductId", p_uProductId),
-                    new SqlParameter("@p_uSupplierId", p_uSupplierId),
+                    new SqlParameter("@p_uCustomerId", p_uCustomerId),
                     new SqlParameter("@p_iQuantity", p_iQuantity),
                     new SqlParameter("@p_dReceivedDate", p_dReceivedDate),
                     new SqlParameter("@p_sMode", p_sMode)

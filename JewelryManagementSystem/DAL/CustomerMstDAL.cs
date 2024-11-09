@@ -1,13 +1,12 @@
 ﻿using JewelryManagementSystem.Interface;
-using System;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace JewelryManagementSystem.DAL
 {
-    public class IncomingStockMstDAL : IIncomingStockMst
+    public class CustomerMstDAL : ICustomerMst
     {
-        public DataTable GetAllIncomingStock(Guid p_uId)
+        public DataTable GetAllCustomer(Guid p_uId)
         {
             try
             {
@@ -16,7 +15,7 @@ namespace JewelryManagementSystem.DAL
                     new SqlParameter("@p_uId", p_uId)
                 };
 
-                DataTable dt = DALHelper.GetDataTable("IncomingStockMst_SelectAll", parameters);
+                DataTable dt = DALHelper.GetDataTable("CustomerMst_SelectAll", parameters);
                 return dt;
 
             }
@@ -25,22 +24,22 @@ namespace JewelryManagementSystem.DAL
                 throw;
             }
         }
-        
-        public bool AddUpdateIncomingStock(Guid p_uId, Guid p_uProductId, Guid p_uSupplierId, int p_iQuantity, DateTime p_dReceivedDate, string p_sMode)
+
+        public bool AddUpdateDeleteCustomer(Guid p_uId, string p_sName, string p_sEmails, string p_sContact, string p_sAddress, string p_sMode)
         {
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@p_uId", p_uId),
-                    new SqlParameter("@p_uProductId", p_uProductId),
-                    new SqlParameter("@p_uSupplierId", p_uSupplierId),
-                    new SqlParameter("@p_iQuantity", p_iQuantity),
-                    new SqlParameter("@p_dReceivedDate", p_dReceivedDate),
+                    new SqlParameter("@p_sName", p_sName),
+                    new SqlParameter("@p_sEmails", p_sEmails),
+                    new SqlParameter("@p_sContact", p_sContact),
+                    new SqlParameter("@p_sAddress", p_sAddress),
                     new SqlParameter("@p_sMode", p_sMode)
                 };
 
-                int vReturnValue = DALHelper.ExecuteNonQuery("IncomingStockMst_AddUpdateDelete", parameters);
+                int vReturnValue = DALHelper.ExecuteNonQuery("CustomerMst_AddUpdateDelete", parameters);
                 return (vReturnValue == -1 ? false : true);
             }
             catch (Exception)

@@ -12,6 +12,8 @@ builder.Services.AddScoped<ICategoryMst, CategoryMstDAL>();
 builder.Services.AddScoped<ISupplierMst, SupplierMstDAL>();
 builder.Services.AddScoped<IProductMst, ProductMstDAL>();
 builder.Services.AddScoped<IIncomingStockMst, IncomingStockMstDAL>();
+builder.Services.AddScoped<ICustomerMst, CustomerMstDAL>();
+builder.Services.AddScoped<IOutgoingStockMst, OutgoingStockMstDAL>();
 
 var app = builder.Build();
 

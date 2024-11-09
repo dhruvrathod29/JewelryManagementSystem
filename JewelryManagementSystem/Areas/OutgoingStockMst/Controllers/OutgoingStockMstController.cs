@@ -1,34 +1,33 @@
-﻿using Humanizer;
-using JewelryManagementSystem.Areas.IncomingStockMst.Models;
-using JewelryManagementSystem.Areas.ProductMst.Models;
+﻿using JewelryManagementSystem.Areas.IncomingStockMst.Models;
 using JewelryManagementSystem.DAL;
 using JewelryManagementSystem.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
+using JewelryManagementSystem.Areas.OutgoingStockMst.Models;
 
-namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
+namespace JewelryManagementSystem.Areas.OutgoingStockMst.Controllers
 {
-    [Area("IncomingStockMst")]
-    [Route("IncomingStockMst/[Controller]/[action]")]
-    public class IncomingStockMstController : Controller
+    [Area("OutgoingStockMst")]
+    [Route("OutgoingStockMst/[Controller]/[action]")]
+    public class OutgoingStockMstController : Controller
     {
+
         #region Service
-        private readonly IIncomingStockMst _incomingStockService;
+        private readonly IOutgoingStockMst _outgoingStockService;
         private readonly IProductMst _productService;
         private readonly ICategoryMst _categoryService;
-        private readonly ISupplierMst _supplierService;
+        private readonly ICustomerMst _customerService;
         #endregion
 
         #region Constructor
-        public IncomingStockMstController(IProductMst productService, ICategoryMst categoryService, ISupplierMst supplierService, IIncomingStockMst incomingStockService)
+        public OutgoingStockMstController(IProductMst productService, ICategoryMst categoryService, ICustomerMst customerService, IOutgoingStockMst outgoingStockService)
         {
             _productService = productService;
             _categoryService = categoryService;
-            _supplierService = supplierService;
-            _incomingStockService = incomingStockService;
+            _customerService = customerService;
+            _outgoingStockService = outgoingStockService;
         }
         #endregion
 
@@ -36,38 +35,38 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
         public IActionResult Index()
         {
             FillDropDown();
-            return View("IncomingStockMst_Index");
+            return View("OutgoingStockMst_Index");
         }
         #endregion
 
-        #region Fill Incoming Stock
-        public IActionResult FillIncomingStock()
+        #region Fill Outgoing Stock
+        public IActionResult FillOutgoingStock()
         {
             try
             {
                 Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
-                DataTable dtIncomingStock = _incomingStockService.GetAllIncomingStock(p_uId);
+                DataTable dtOutgoingStock = _outgoingStockService.GetAllOutgoingStock(p_uId);
 
-                List<IncomingStockMstModel> incomingStockList = new List<IncomingStockMstModel>();
+                List<OutgoingStockMstModel> outgoingStockList = new List<OutgoingStockMstModel>();
 
-                if (dtIncomingStock != null && dtIncomingStock.Rows.Count > 0)
+                if (dtOutgoingStock != null && dtOutgoingStock.Rows.Count > 0)
                 {
-                    incomingStockList = dtIncomingStock
+                    outgoingStockList = dtOutgoingStock
                             .Rows.Cast<DataRow>() // Ensure you're working with DataRow objects
-                            .Select(row => new IncomingStockMstModel
+                            .Select(row => new OutgoingStockMstModel
                             {
                                 ID = Guid.TryParse(row["ID"].ToString(), out Guid guid) ? guid : Guid.Empty,
                                 ProductId = Guid.TryParse(row["PRODUCTID"].ToString(), out Guid productid) ? productid : Guid.Empty,
                                 ProductName = CCommon.NullOrEmptyToString(row["PRODUCTNAME"]),
-                                SupplierId = Guid.TryParse(row["SUPPLIERID"].ToString(), out Guid supplierid) ? supplierid : Guid.Empty,
-                                SupplierName = CCommon.NullOrEmptyToString(row["SUPPLIERNAME"]),
+                                CustomerId = Guid.TryParse(row["CUSTOMERID"].ToString(), out Guid supplierid) ? supplierid : Guid.Empty,
+                                CustomerName= CCommon.NullOrEmptyToString(row["CUSTOMERNAME"]),
                                 CategoryId = Guid.TryParse(row["CATEGORYID"].ToString(), out Guid categoryid) ? categoryid : Guid.Empty,
                                 CategoryName = CCommon.NullOrEmptyToString(row["CATEGORYNAME"]),
                                 Quantity = CCommon.GetInt(row["QUANTITY"]),
                                 Description = CCommon.NullOrEmptyToString(row["DESCRIPTION"]),
                                 Price = CCommon.GetInt(row["PRICE"]),
                                 TotalPrice = CCommon.GetInt(row["TOTALPRICE"]),
-                                ReceivedDate = CCommon.NullOrDefaultDateTime(row["RECEIVEDDATE"]),
+                                SoldDate = CCommon.NullOrDefaultDateTime(row["SOLDDATE"]),
                                 CreationDate = CCommon.NullOrDefaultDateTime(row["CREATIONDATE"]),
                                 ModificationDate = CCommon.NullOrDefaultDateTime(row["MODIFICATIONDATE"])
 
@@ -77,7 +76,7 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
 
                 return Json(new
                 {
-                    IncomingStockMst = incomingStockList
+                    OutgoingStockMst = outgoingStockList
                 });
 
             }
@@ -94,19 +93,19 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
         }
         #endregion
 
-        #region Add Update Incoming Stock
+        #region Add Update Outgoing Stock
         [HttpPost]
-        public IActionResult AddUpdateIncomingStock()
+        public IActionResult AddUpdateOutgoingStock()
         {
             Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
             Guid.TryParse(Request.Form["p_sProductId"], out Guid p_uProductId);
-            Guid.TryParse(Request.Form["p_sSupplierId"], out Guid p_uSupplierId);
+            Guid.TryParse(Request.Form["p_sCustomerId"], out Guid p_uCustomerId);
             int.TryParse(Request.Form["p_iQuantity"], out int p_iQuantity);
             DateTime.TryParse(Request.Form["p_sReceivedDate"], out DateTime p_dReceivedDate);
             string p_sMode = string.IsNullOrEmpty(Request.Form["p_sMode"]) ? string.Empty : Request.Form["p_sMode"].ToString();
             try
             {
-                bool error = _incomingStockService.AddUpdateIncomingStock(p_uId, p_uProductId, p_uSupplierId, p_iQuantity, p_dReceivedDate, p_sMode);
+                bool error = _outgoingStockService.AddUpdateOutgoingStock(p_uId, p_uProductId, p_uCustomerId, p_iQuantity, p_dReceivedDate, p_sMode);
 
                 if (error)
                 {
@@ -153,7 +152,7 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
             try
             {
                 Guid.TryParse(Request.Form["p_sId"], out Guid p_uId);
-                bool error = _incomingStockService.AddUpdateIncomingStock(p_uId, Guid.Empty, Guid.Empty, 0, DateTime.Now, "DELETE");
+                bool error = _outgoingStockService.AddUpdateOutgoingStock(p_uId, Guid.Empty, Guid.Empty, 0, DateTime.Now, "DELETE");
 
                 if (error)
                 {
@@ -207,9 +206,9 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
                         ViewBag.ddlCategory = new List<SelectListItem>();
                     }
 
-                    if (ds.Tables.Contains("dtSupplier"))
+                    if (ds.Tables.Contains("dtCustomer"))
                     {
-                        ViewBag.ddlSupplier = ds.Tables["dtSupplier"].AsEnumerable()
+                        ViewBag.ddlCustomer = ds.Tables["dtCustomer"].AsEnumerable()
                                             .Select(row => new SelectListItem
                                             {
                                                 Value = row["ID"].ToString(),
@@ -219,7 +218,7 @@ namespace JewelryManagementSystem.Areas.IncomingStockMst.Controllers
                     }
                     else
                     {
-                        ViewBag.ddlSupplier = new List<SelectListItem>();
+                        ViewBag.ddlCustomer = new List<SelectListItem>();
                     }
 
                     if (ds.Tables.Contains("dtProduct"))
